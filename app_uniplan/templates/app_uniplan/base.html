@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-9">
+		<div class="col-md-10">
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title text-center">Welcome to UniPlan.io</h5>
@@ -52,6 +52,16 @@
 						<ul>
 							<li>Deakin University</li>
 						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="card">
+				<div class="card-body">
+
+					{% block content %}
+					{% endblock %}
 				</div>
 			</div>
 		</div>
@@ -60,7 +70,5 @@
 {% comment %} </div> {% endcomment %}
 
 
-{% block content %}
-{% endblock %}
 </body>
 </html>
