@@ -12,7 +12,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] Able to handle complexity: hurdle tasks
 - [ ] Have a dashboard which displays your WAM
 - [ ] Design using React and Boostrap (limit efforts invested in manually writing CSS)
-- [ ] 
+- [ ] CRUD API functionality
 
 
 ## Database design
