@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -10,7 +12,12 @@ class Student_Profile(models.Model):
 	university = models.ForeignKey('University', on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.user.username
+		return str(self.user)
+
+
+	
+
+
 	
 class University(models.Model):
 	name = models.CharField(max_length=50)
@@ -22,6 +29,9 @@ class Course(models.Model):
 	course_code = models.CharField(max_length=10)
 	course_name = models.CharField(max_length=100)
 
+	def __str__(self):
+		return self.course_name
+
 class Semester(models.Model):
 	year = models.IntegerField()
 	index = models.IntegerField(choices=[(1, "1"), (2, "2"), (3, "3")], default=1)
@@ -29,7 +39,7 @@ class Semester(models.Model):
 	end_date = models.DateField()
 	
 	def __str__(self):
-		return self.semester_name
+		return f"{self.year}-Semester {self.index}"
 
 class Unit(models.Model):
 	'''
@@ -37,13 +47,13 @@ class Unit(models.Model):
 	'''
 	name = models.CharField(max_length=200)
 	unit_code = models.CharField(max_length=8, unique=True, primary_key=True)
-	unitguideURL = models.URLField(blank=True)
-	description = models.TextField()
+	unitguideURL = models.URLField(blank=True, null=True)
+	description = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(default=timezone.now)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.name
+		return f"{self.unit_code}: {self.name}"
 
 class Enrollments(models.Model):
 	'''
@@ -51,6 +61,9 @@ class Enrollments(models.Model):
 	'''
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+	semester = models.ForeignKey(Semester, on_delete=models.CASCADE, null=True)
+	passed = models.BooleanField(default=False)
+
 	
 	def __str__(self):
 		return self.user.username + ' ' + self.unit.name

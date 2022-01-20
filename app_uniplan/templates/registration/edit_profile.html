@@ -3,7 +3,13 @@
 {% block title %}Edit Profile...{% endblock %}
 
 {% block content %}
-  <h2>Edit Profile: {{ user.username }}</h2>
+
+
+<h2>Edit Profile: {{ user.username }}</h2>
+Course: {{ user.student_profile.course }}
+<br>
+University: {{user.student_profile.university}}
+
   <div class="form-group">
   <form method="post">
     {% csrf_token %}
