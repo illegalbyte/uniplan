@@ -3,6 +3,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 
 ## Functionality Requirements
 
+- [ ] Login / Logout
 - [ ] Ability to track units enrolled in 
 - [ ] Plan future unit enrollments (coursemap) and have this validated against Deakin University unit guides (eg warn me if a unit is only available in semester 2 etc)
 - [ ] Deploy using AWS – include some sort of serverless functionality
@@ -18,3 +19,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 ## Database design
 
 Use Draw.io file 'schema.drawio'
+
+# Django Login Functionality
+
+- [https://learndjango.com/tutorials/django-login-and-logout-tutorial](https://learndjango.com/tutorials/django-login-and-logout-tutorial)
