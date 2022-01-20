@@ -7,7 +7,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] Ability to track units enrolled in 
 - [ ] Plan future unit enrollments (coursemap) and have this validated against Deakin University unit guides (eg warn me if a unit is only available in semester 2 etc)
 - [ ] Deploy using AWS – include some sort of serverless functionality
-- [ ] Implement an accounts and login system utilising Django Auth (this tool should be able to benefit others)
+- [X] Implement an accounts and login system utilising Django Auth (this tool should be able to benefit others)
 - [ ] Track unit grades (High Distinction, etc)
 - [ ] Measure and track assignment performance, assessment weightings, throughout the semester 
 - [ ] Able to handle complexity: hurdle tasks
@@ -16,6 +16,9 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] CRUD API functionality
 - [ ] Working email backend
 - [ ] Upcoming assessments and email notifications
+- [ ] Implement sessions
+- [ ] Batch add units
+- [ ] Batch add assignments (a dropdown to select relevant unit -> one blank box for assignment, and a plus undearneath to add another blank form)
 
 
 ## Database design
