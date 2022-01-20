@@ -4,6 +4,18 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Student_Profile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	course = models.ForeignKey('Course', on_delete=models.CASCADE)
+	university = models.ForeignKey('University', on_delete=models.CASCADE)
+	
+class University(models.Model):
+	name = models.CharField(max_length=50)
+
+class Course(models.Model):
+	course_code = models.CharField(max_length=10)
+	course_name = models.CharField(max_length=100)
+
 class Semester(models.Model):
 	year = models.IntegerField()
 	index = models.IntegerField(choices=[(1, "1"), (2, "2"), (3, "3")], default=1)
