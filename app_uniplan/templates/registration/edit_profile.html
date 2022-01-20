@@ -1,0 +1,14 @@
+{% extends 'app_uniplan/base.html' %}
+
+{% block title %}Edit Profile...{% endblock %}
+
+{% block content %}
+  <h2>Edit Profile: {{ user.username }}</h2>
+  <div class="form-group">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+  </form>
+  <div>
+{% endblock %}
