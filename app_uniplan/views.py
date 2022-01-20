@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 
 
 # Create your views here.
@@ -7,7 +9,7 @@ from django.contrib.auth.views import LoginView
 def index(request):
 	return render(request, 'app_uniplan/index.html')
 
-class CustomLoginView(LoginView):
-	login_template = 'app_uniplan/login.html'
-	def form_valid(self, form):
-		return super(CustomLoginView, self).form_valid(form)
+class SignupView(generic.CreateView):
+	form_class = UserCreationForm
+	success_url = reverse_lazy('login')
+	template_name = 'registration/signup.html'
