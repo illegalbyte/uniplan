@@ -8,9 +8,15 @@ class Student_Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	course = models.ForeignKey('Course', on_delete=models.CASCADE)
 	university = models.ForeignKey('University', on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.user.username
 	
 class University(models.Model):
 	name = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.name
 
 class Course(models.Model):
 	course_code = models.CharField(max_length=10)
