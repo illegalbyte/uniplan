@@ -32,12 +32,6 @@ def signup(request):
 		profile_form = StudentProfileForm()
 	return render(request, 'registration/signup.html', {'form': form, 'profile_form': profile_form})
 
-# class SignupView(generic.CreateView):
-# 	user_form = SignupForm
-# 	profile_form = StudentProfileForm
-# 	success_url = reverse_lazy('login')
-# 	template_name = 'registration/signup.html'
-
 
 class UpdateProfile(generic.UpdateView):
 	form_class = UpdateProfile
