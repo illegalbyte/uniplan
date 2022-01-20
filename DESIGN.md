@@ -14,6 +14,8 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] Have a dashboard which displays your WAM
 - [ ] Design using React and Boostrap (limit efforts invested in manually writing CSS)
 - [ ] CRUD API functionality
+- [ ] Working email backend
+- [ ] Upcoming assessments and email notifications
 
 
 ## Database design
@@ -23,3 +25,6 @@ Use Draw.io file 'schema.drawio'
 # Django Login Functionality
 
 - [https://learndjango.com/tutorials/django-login-and-logout-tutorial](https://learndjango.com/tutorials/django-login-and-logout-tutorial)
+- [Youtube Series on Django user forms](https://www.youtube.com/watch?v=Nxgi4qF6i1Q&list=PLCC34OHNcOtr025c1kHSPrnP18YPB-NFi&index=24)
+
+Login and authentication functionality leverages Django's builtin auth model. Rather than modifying the base user class there is a supplementary model 'profile' which 
