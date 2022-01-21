@@ -1,0 +1,13 @@
+{% extends 'app_uniplan/base.html' %}
+
+{% block content %}
+
+Welcome admin!
+
+<form action="{%url 'scrape'%}" method=POST>
+	{% csrf_token %}
+	{{ form.as_p}}
+	<button type="submit">Add Units</button>
+</form>
+
+{% endblock %}

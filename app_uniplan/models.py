@@ -41,7 +41,7 @@ class Unit(models.Model):
 	the model for a unit (university subject)
 	'''
 	name = models.CharField(max_length=200)
-	unit_code = models.CharField(max_length=8, unique=True, primary_key=True)
+	unit_code = models.CharField(max_length=10, unique=True, primary_key=True)
 	unitguideURL = models.URLField(blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(default=timezone.now)

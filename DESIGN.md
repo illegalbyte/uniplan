@@ -37,3 +37,15 @@ Use Draw.io file 'schema.drawio'
 Login and authentication functionality leverages Django's builtin auth model. Rather than modifying the base user class there is a supplementary model 'profile' which has its own form and is saved alongside the user object at signup. It turned out to be incredibly challenging to get the user profile to be created alongside the user at signup – there were many different approaches to this, most of which involved creating a listener within the Django model, however I could not get this to work (trust me, I tried). [This method of parsing and saving two forms ended up saving me](https://youtu.be/Tja4I_rgspI). We are now saving the profile as a one-to-one relationship with the user, and storing attributes such as University, and Course under this 'student_profile' model. Needless to say – lesson learnt: keep it simple stupid. 
 
 Next I will implement enrolling in units, registering assignments etc – lets start with fixing our models.
+
+# Enrollments, Units, Assignments
+
+So this tool is meant to somewhat be a live 'course-map'. You should be able to make edits to it, and in realtime, the coursemap will validate and tell you if your course is valid or not. 
+
+One issue is that this validation requires a huge dataset which will need to be able to check unit pre-requisites, whether the unit is available in the given semester, etc. I've added the ability to manually add units, however it's probably best we move onto web-scraping the unit guide. Thankfully these are fairly standardised documents which shouldn't be very hard to digest. We need a few key items from them: 
+
+* course map URL
+* Deakin course code
+* List of major sequences
+* list of Minor sequences
+* Core units

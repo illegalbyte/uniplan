@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1>Your Unit Enrollment:</h1>
+<h1>Plan Your Unit Enrollment:</h1>
 
 <table class="table table-bordered">
 	<tr>
@@ -13,7 +13,14 @@
 		<th>Semester 2</th>
 		<th>Semester 3</th>
 	</tr>
-	
+	{% for year in years %}
+	<tr>
+		<th>{{year}}</th>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	{% endfor %}
 </table>
 
 

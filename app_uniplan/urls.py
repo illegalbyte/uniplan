@@ -10,5 +10,6 @@ urlpatterns = [
 	path('units/', views.create_units, name='units'),
 	path('units/<str:pk>/', views.unit_detail, name='unit_detail'),
 	path('assignments/', views.assignments, name='assignments'),
-	path('enrollment', views.enrollment, name='enrollment'),
+	path('enrollment/', views.enrollment, name='enrollment'),
+	path('scrape/', views.batch_add_units, name='scrape'),
 ]

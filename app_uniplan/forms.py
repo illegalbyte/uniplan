@@ -62,3 +62,6 @@ class CreateAssignmentForm(forms.ModelForm):
 		model = Assignment
 		fields = '__all__'
 		exclude = ['created_by']
+
+class ScrapeURLForm(forms.Form):
+	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide', label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
