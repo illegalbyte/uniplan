@@ -40,7 +40,6 @@ Table unit {
   description TextField
   created_date datetime
   created_by FK_User
-  major_sequence FK_major_sequence
 }
 
 Table enrollments {
@@ -78,23 +77,46 @@ Ref: "university"."id" < "student_profile"."university"
 
 Ref: "course"."id" < "student_profile"."course"
 
-Table major_sequence {
-  id int [pk, increment]  
+Table major_sequences {
+  id int [pk, increment]
+  title varchar
   course FK_course
   name varchar
 }
 
-Table core_sqeuence {
-  id int [pk, increment]
+Table minor_sequences {
+  id int [pk, increment]  
+  title varchar
   course FK_course
-  unit FK_Unit
+  name varchar
 }
 
+Table core_sqeuences {
+  id int [pk, increment]
+  course FK_course [note: 'one-to-one relationship between core_sequence units and course']
+}
 
-Ref: "major_sequence"."id" < "unit"."major_sequence"
+Table sequence_units {
+  id int [pk, increment, note: 'This table resolves the many to many relationships between the sequences and units']
+  unit FK_Unit 
+  major FK_major
+  minor FK_minor
+  core FK_core
+  
+  
+  
+}
 
-Ref: "course"."id" < "major_sequence"."course"
+Ref: "course"."id" < "major_sequences"."course"
 
-Ref: "core_sqeuence"."course" - "course"."id"
+Ref: "core_sqeuences"."course" - "course"."id"
 
-Ref: "core_sqeuence"."unit" < "unit"."unit_code"
+Ref: "minor_sequences"."course" > "course"."id"
+
+Ref: "core_sqeuences"."id" < "sequence_units"."core"
+
+Ref: "major_sequences"."id" < "sequence_units"."major"
+
+Ref: "minor_sequences"."id" < "sequence_units"."minor"
+
+Ref: "unit"."unit_code" < "sequence_units"."unit"
