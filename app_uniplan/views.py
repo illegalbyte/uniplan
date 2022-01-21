@@ -6,8 +6,6 @@ from django.views import generic
 from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm
 from .models import Unit, Student_Profile, Enrollments, Assignment, Semester
 
-# Create your views here.
-
 def index(request):
 	return render(request, 'app_uniplan/index.html')
 
