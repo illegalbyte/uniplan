@@ -59,3 +59,8 @@ Great, the web scraper is now able to take a URL from a webform at /scrape and l
 There are some limitations so far: 
 -  the scraper can't parse a list of core units, a list of major sequences, or a list of minor sequences: this is because I'm fairly unfamiliar with beautiful soup, and how to best go about parsing the document. I'm sure the answer is waiting for me on some ungodly stackoverflow thread, but I'll leave it for another day. 
 -  In order to save this data, I'll have to add a few tables to my database too – major_sequences, core_sequences, and minor_sequences tables. Each course has one core_sequence so this is a one-to-one relationship, while the other two will be one-to-many relationships with the units table.
+
+
+# form.as_table
+
+I'm putting this here as a reminder to try format my forms a bit differently
