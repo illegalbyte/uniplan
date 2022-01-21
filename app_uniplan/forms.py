@@ -54,3 +54,11 @@ class CreateUnitForm(forms.ModelForm):
 	class Meta:
 		model = Unit
 		fields = ('name', 'unit_code', 'description', 'unitguideURL')
+
+class CreateAssignmentForm(forms.ModelForm):
+	bootstrap_attributes = 'form-control'
+
+	class Meta:
+		model = Assignment
+		fields = '__all__'
+		exclude = ['created_by']

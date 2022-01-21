@@ -24,7 +24,6 @@
 		{% endfor %}
 	</tbody>
 </table>
-
 <script>
 $(document).ready(function() {
     $('#assignments').DataTable({
@@ -34,5 +33,12 @@ $(document).ready(function() {
 	});
 });
 </script>
+
+<h1>Add an assignment</h1>
+<form method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit" class="btn btn-primary">Add</button>
+</form>
 
 {% endblock %}

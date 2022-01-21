@@ -73,8 +73,9 @@ class Assignment(models.Model):
 	total_marks_available = models.IntegerField(blank=True, null=True, help_text="The total marks available for the assignment")
 	title = models.CharField(max_length=200, help_text="The title of the assignment")
 	description = models.TextField(blank=True, null=True, help_text="The description of the assignment")
-	due_date = models.DateField()
-	status = models.CharField(blank=True, null=True, max_length=10, choices=[('open', 'Open'), ('closed', 'Closed'), ('graded', 'Graded')], default='open')
+	due_date = models.DateTimeField(blank=True, null=True, help_text="The due date of the assignment")
+	status = models.CharField(blank=True, null=True, max_length=15, choices=[(
+		'unpublished', 'Unpublished'), ('open', 'Open'), ('closed', 'Closed'), ('graded', 'Graded')], default='open')
 	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")
 	
 	def __str__(self):

@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm
-from .models import Unit, Student_Profile, Enrollments, Assignment
+from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm
+from .models import Unit, Student_Profile, Enrollments, Assignment, Semester
 
 # Create your views here.
 
@@ -70,7 +70,18 @@ def assignments(request):
 	if not request.user.is_authenticated:
 		return redirect('login')
 
+	add_assignment_form = CreateAssignmentForm
 	user = request.user
 	assignments = Assignment.objects.filter(created_by=user)
-	context = {'assignments': assignments}
+	context = {'assignments': assignments, 'form': add_assignment_form}
 	return render(request, 'app_uniplan/assignments.html', context)
+
+def enrollment(request):
+	if not request.user.is_authenticated:
+		return redirect('login')
+	
+	semesters = Semester.objects.all()
+	user = request.user
+	enrollments = Enrollments.objects.filter(student=user)
+	context = {'enrollments': enrollments}
+	return render(request, 'app_uniplan/enrollment.html', context)
