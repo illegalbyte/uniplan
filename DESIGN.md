@@ -16,10 +16,13 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] CRUD API functionality
 - [ ] Working email backend
 - [ ] Upcoming assessments and email notifications
-- [ ] Implement sessions
+- [ ] [Implement sessions](https://www.youtube.com/watch?v=N-R5mT-nIDk)
 - [ ] Batch add units
 - [ ] Batch add assignments (a dropdown to select relevant unit -> one blank box for assignment, and a plus undearneath to add another blank form)
 
+## Design 
+
+- [ ] Dropdown for all accounts tasks (use django if statements to only show relevant links: eg don't show logout if not logged in)
 
 ## Database design
 
@@ -33,3 +36,4 @@ Use Draw.io file 'schema.drawio'
 
 Login and authentication functionality leverages Django's builtin auth model. Rather than modifying the base user class there is a supplementary model 'profile' which has its own form and is saved alongside the user object at signup. It turned out to be incredibly challenging to get the user profile to be created alongside the user at signup – there were many different approaches to this, most of which involved creating a listener within the Django model, however I could not get this to work (trust me, I tried). [This method of parsing and saving two forms ended up saving me](https://youtu.be/Tja4I_rgspI). We are now saving the profile as a one-to-one relationship with the user, and storing attributes such as University, and Course under this 'student_profile' model. Needless to say – lesson learnt: keep it simple stupid. 
 
+Next I will implement enrolling in units, registering assignments etc – lets start with fixing our models.

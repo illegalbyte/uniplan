@@ -13,11 +13,6 @@ class Student_Profile(models.Model):
 
 	def __str__(self):
 		return str(self.user)
-
-
-	
-
-
 	
 class University(models.Model):
 	name = models.CharField(max_length=50)
@@ -35,8 +30,8 @@ class Course(models.Model):
 class Semester(models.Model):
 	year = models.IntegerField()
 	index = models.IntegerField(choices=[(1, "1"), (2, "2"), (3, "3")], default=1)
-	start_date = models.DateField()
-	end_date = models.DateField()
+	start_date = models.DateField(null=True, blank=True)
+	end_date = models.DateField(null=True, blank=True)
 	
 	def __str__(self):
 		return f"{self.year}-Semester {self.index}"
@@ -50,7 +45,7 @@ class Unit(models.Model):
 	unitguideURL = models.URLField(blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(default=timezone.now)
-	created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return f"{self.unit_code}: {self.name}"
@@ -75,10 +70,12 @@ class Assignment(models.Model):
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 	weighting = models.FloatField(help_text="The % weighting of the assignment in the overall grade as a decimal (e.g. 0.5 for 50%)")
-	total_marks_available = models.IntegerField(help_text="The total marks available for the assignment")
+	total_marks_available = models.IntegerField(blank=True, null=True, help_text="The total marks available for the assignment")
 	title = models.CharField(max_length=200, help_text="The title of the assignment")
 	description = models.TextField(blank=True, null=True, help_text="The description of the assignment")
 	due_date = models.DateField()
+	status = models.CharField(blank=True, null=True, max_length=10, choices=[('open', 'Open'), ('closed', 'Closed'), ('graded', 'Graded')], default='open')
+	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")
 	
 	def __str__(self):
 		return self.title

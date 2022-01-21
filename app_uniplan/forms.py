@@ -42,3 +42,15 @@ class UpdateProfile(UserChangeForm):
 	class Meta:
 		model = User
 		fields = ('username', 'email', 'first_name','last_name')
+
+#TODO: Add a form for the student profile which will be used to update the student profile.
+
+class CreateUnitForm(forms.ModelForm):
+	name = forms.CharField(max_length=80, required=True, help_text='Required. 50 characters or fewer.', label='Unit Name', widget=forms.TextInput(attrs={'class': 'form-control'}))
+	unit_code = forms.CharField(max_length=10, required=True, help_text='Required. 10 characters or fewer.', label='Unit Code', widget=forms.TextInput(attrs={'class': 'form-control'}))
+	description = forms.CharField(max_length=200, required=False, help_text='Unit Description.', label='Unit Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
+	unitguideURL = forms.URLField(max_length=300, required=False, help_text='Unit Guide URL.', label='Unit Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+	class Meta:
+		model = Unit
+		fields = ('name', 'unit_code', 'description', 'unitguideURL')

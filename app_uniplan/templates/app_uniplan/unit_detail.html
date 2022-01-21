@@ -1,0 +1,16 @@
+{% extends 'app_uniplan/base.html' %}
+
+{% block title %}Details for {{unit.unit_code}}{% endblock %}
+
+
+{% block content %}
+
+<h1>{{unit.unit_code}}: {{unit.name}} </h1>
+
+<a href={{unit.unitguideurl}}>Unit Guide</a>
+
+<p>{{unit.description}}</p>
+
+
+
+{% endblock %}

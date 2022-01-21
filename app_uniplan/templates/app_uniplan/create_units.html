@@ -1,0 +1,21 @@
+{% extends 'app_uniplan/base.html' %}
+
+{% block content %}
+
+Here are your enrollments for {{ user.student_profile.university }}: {{ user.student_profile.course }}
+<br>
+{% for unit in units %}
+
+<a href="{{unit.unit_code}}">{{unit.unit_code}}: {{ unit.name }}</a>
+<br>
+
+{% endfor %}
+
+
+<form method=POST>
+	{% csrf_token %}
+	{{ unit_form.as_p }}
+	<button type="submit">Create Unit</button>
+</form>
+
+{% endblock %}
