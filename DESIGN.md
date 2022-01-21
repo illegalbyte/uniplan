@@ -26,7 +26,9 @@ This document is an ongoing record of my design process (mistakes and all) – h
 
 ## Database design
 
-Use Draw.io file 'schema.drawio'
+<s>Use Draw.io file 'schema.drawio'</s>
+
+I've stumbled upon the dbml markup language which is incredibly useful and has a great tool at [dbdiagrams.io](https://dbdiagrams.io) – essentially this is a way of writing ER diagrams as code, and it's really neat! Definitely something I need, mainly to keep track of all the attribute names. All my database schema design will be done in the schema.dbml file for now. 
 
 # Django Login Functionality
 
