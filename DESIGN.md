@@ -49,3 +49,11 @@ One issue is that this validation requires a huge dataset which will need to be 
 * List of major sequences
 * list of Minor sequences
 * Core units
+
+–– a few hours later ––
+
+Great, the web scraper is now able to take a URL from a webform at /scrape and leverage beautifulsoup4 to scrape the Bachelor of Information Technology Web Page – it will then search for all the units listed, and collect the unit code, links to the unit's handbook, and the unit's title. The scraper also collects information about the degree, but given I'm still working with just Bachelor of IT data, I'll handle this later. ( **TODO**: allow scraper to add the course if it does not yet exist )
+
+There are some limitations so far: 
+-  the scraper can't parse a list of core units, a list of major sequences, or a list of minor sequences: this is because I'm fairly unfamiliar with beautiful soup, and how to best go about parsing the document. I'm sure the answer is waiting for me on some ungodly stackoverflow thread, but I'll leave it for another day. 
+-  In order to save this data, I'll have to add a few tables to my database too – major_sequences, core_sequences, and minor_sequences tables. Each course has one core_sequence so this is a one-to-one relationship, while the other two will be one-to-many relationships with the units table.

@@ -34,13 +34,13 @@ Table semester {
 }
 
 Table unit {
-  id int [pk, increment]
   name varchar
   unit_code varchar [pk]
   unitguideurl url
   description TextField
   created_date datetime
   created_by FK_User
+  major_sequence FK_major_sequence
 }
 
 Table enrollments {
@@ -77,3 +77,24 @@ Ref: "users"."id" < "assignment"."created_by"
 Ref: "university"."id" < "student_profile"."university"
 
 Ref: "course"."id" < "student_profile"."course"
+
+Table major_sequence {
+  id int [pk, increment]  
+  course FK_course
+  name varchar
+}
+
+Table core_sqeuence {
+  id int [pk, increment]
+  course FK_course
+  unit FK_Unit
+}
+
+
+Ref: "major_sequence"."id" < "unit"."major_sequence"
+
+Ref: "course"."id" < "major_sequence"."course"
+
+Ref: "core_sqeuence"."course" - "course"."id"
+
+Ref: "core_sqeuence"."unit" < "unit"."unit_code"
