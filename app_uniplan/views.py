@@ -80,6 +80,6 @@ def enrollment(request):
 	
 	semesters = Semester.objects.all()
 	user = request.user
-	enrollments = Enrollments.objects.filter(student=user)
+	enrollments = Enrollments.objects.filter(user=user)
 	context = {'enrollments': enrollments}
 	return render(request, 'app_uniplan/enrollment.html', context)
