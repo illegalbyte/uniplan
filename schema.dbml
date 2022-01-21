@@ -1,0 +1,79 @@
+Table users as u {
+  id int [pk, increment]
+  username varchar
+  email varchar 
+  
+}
+
+Table student_profile {
+  id int [pk, increment]
+  user int
+  course int
+  university int
+}
+
+Ref: u.id - student_profile.user
+
+Table university {
+  id int [pk, increment]
+  name varchar
+}
+
+Table course {
+  id int [pk, increment]
+  course_code varchar
+  course_name varchar
+}
+
+Table semester {
+  id int [pk, increment]
+  year int
+  index choice(1,2,3)
+  start_date datetime
+  end_date datetime
+}
+
+Table unit {
+  id int [pk, increment]
+  name varchar
+  unit_code varchar [pk]
+  unitguideurl url
+  description TextField
+  created_date datetime
+  created_by FK_User
+}
+
+Table enrollments {
+  id int [pk, increment]
+  user FK_user
+  unit FK_Unit
+  semester FK_Semester
+  passed boolean
+}
+
+Ref: "enrollments"."user" > "u"."id"
+
+Ref: "enrollments"."unit" > "unit"."unit_code"
+
+Ref: "enrollments"."semester" > "semester"."id"
+
+Table assignment {
+  id int [pk, increment]
+  unit FK_Unit
+  created_by FK_User
+  weighting float
+  total_marks_available int
+  title varchar
+  description varchar
+  due_date datetime
+  status choice(unpublished, open, closed, graded)
+  marks int [note: 'marks awarded']
+}
+
+Ref: "unit"."unit_code" < "assignment"."unit"
+
+Ref: "users"."id" < "assignment"."created_by"
+
+Ref: "university"."id" < "student_profile"."university"
+
+Ref: "course"."id" < "student_profile"."course"
