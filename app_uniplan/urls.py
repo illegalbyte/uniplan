@@ -12,4 +12,5 @@ urlpatterns = [
 	path('assignments/', views.assignments, name='assignments'),
 	path('enrollment/', views.enrollment, name='enrollment'),
 	path('scrape/', views.batch_add_units, name='scrape'),
+	path('sequences/', views.sequences, name='sequences'),
 ]

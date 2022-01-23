@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm
-from .models import Unit, Enrollments, Assignment, Semester
+from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSet
+from .models import Unit, Enrollments, Assignment, Semester, Course
 from .deakin_scraper import course_scraper
 
 def index(request):
@@ -105,3 +105,17 @@ def batch_add_units(request):
 		form = ScrapeURLForm
 		context = {'form': form}
 		return render(request, 'app_uniplan/scrape_deakin.html', context)
+
+@login_required
+def sequences(request):
+	user = request.user
+	enrollments = Enrollments.objects.filter(user=user)
+	semesters = Semester.objects.all()
+	courses = Course.objects.all()
+	majors = MajorSequence.objects.all()
+	unitsets = UnitSet.objects.all()
+	# create a dictionary of each major sequence and its units
+
+
+	context = {'enrollments': enrollments, 'courses': courses, 'majors': majors, 'units': unitsets}
+	return render(request, 'app_uniplan/sequences.html', context)
