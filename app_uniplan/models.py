@@ -89,7 +89,7 @@ class CoreSequence(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	
 	def __str__(self):
-		return self.title
+		return self.course.course_name + ' Core Sequence'
 
 class MajorSequence(models.Model):
 	'''
@@ -98,9 +98,10 @@ class MajorSequence(models.Model):
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the major sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	units = models.ManyToManyField(Unit)
 		
 	def __str__(self):
-		return self.title
+		return self.course.course_name + ': ' + self.title
 
 class MinorSequence(models.Model):
 	'''
@@ -113,7 +114,7 @@ class MinorSequence(models.Model):
 	def __str__(self):
 		return self.title
 
-class SequenceUnits(models.Model):
+class UnitSet(models.Model):
 	'''
 	the model for which maps units to a sequence
 	'''
@@ -123,4 +124,4 @@ class SequenceUnits(models.Model):
 	minor_sequence = models.ForeignKey(MinorSequence, on_delete=models.CASCADE, blank=True, null=True)
 	
 	def __str__(self):
-		return self.unit.name + ' for ' + self.sequence.title
+		return self.unit.name + ': ' + self.sequence.title
