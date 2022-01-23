@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.auth.decorators import login_required
 from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm
 from .models import Unit, Student_Profile, Enrollments, Assignment, Semester
 from .deakin_scraper import course_scraper
@@ -40,10 +41,9 @@ class UpdateProfile(generic.UpdateView):
 	def get_object(self):
 		return self.request.user
 
-def create_units(request):
-	if not request.user.is_authenticated:
-		return redirect('login')
 
+@login_required
+def create_units(request):
 	if request.method == 'POST':
 		form = CreateUnitForm(request.POST)
 		if form.is_valid():
@@ -58,18 +58,15 @@ def create_units(request):
 	return render(request, 'app_uniplan/create_units.html', context)
 
 
+@login_required
 def unit_detail(request, pk):
-	if not request.user.is_authenticated:
-		return redirect('login')
 	unit = Unit.objects.get(pk=pk)
 	context = {'unit': unit}
 	return render(request, 'app_uniplan/unit_detail.html', context)
 
 
+@login_required
 def assignments(request):
-	if not request.user.is_authenticated:
-		return redirect('login')
-
 	add_assignment_form = CreateAssignmentForm
 	user = request.user
 	assignments = Assignment.objects.filter(created_by=user)
@@ -77,10 +74,8 @@ def assignments(request):
 	return render(request, 'app_uniplan/assignments.html', context)
 
 
+@login_required
 def enrollment(request):
-	if not request.user.is_authenticated:
-		return redirect('login')
-	
 	years = Semester.objects.all().order_by('year').values_list('year', flat=True).distinct()
 	user = request.user
 	enrollments = Enrollments.objects.filter(user=user)
@@ -89,6 +84,7 @@ def enrollment(request):
 	return render(request, 'app_uniplan/enrollment.html', context)
 
 
+@login_required
 def batch_add_units(request):
 	if request.user.is_superuser:
 		if request.method == 'POST':
