@@ -93,12 +93,34 @@ class CoreSequence(models.Model):
 
 class MajorSequence(models.Model):
 	'''
-	the model for a major sequence (optional units) for a course
+	the model for a major sequence for a course
 	Note: this is simply the name of the major sequence, not the actual units
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the major sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-
-	
+		
 	def __str__(self):
 		return self.title
+
+class MinorSequence(models.Model):
+	'''
+	the model for a minor sequence for a course
+	Note: this is simply the name of the minor sequence, not the actual units
+	'''
+	title = models.CharField(max_length=300, help_text="The title of the minor sequence")
+	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+		
+	def __str__(self):
+		return self.title
+
+class SequenceUnits(models.Model):
+	'''
+	the model for which maps units to a sequence
+	'''
+	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+	core_sequence = models.ForeignKey(CoreSequence, on_delete=models.CASCADE, blank=True, null=True)
+	major_sequence = models.ForeignKey(MajorSequence, on_delete=models.CASCADE, blank=True, null=True)
+	minor_sequence = models.ForeignKey(MinorSequence, on_delete=models.CASCADE, blank=True, null=True)
+	
+	def __str__(self):
+		return self.unit.name + ' for ' + self.sequence.title
