@@ -81,14 +81,12 @@ Table major_sequences {
   id int [pk, increment]
   title varchar
   course FK_course
-  name varchar
 }
 
 Table minor_sequences {
   id int [pk, increment]  
   title varchar
   course FK_course
-  name varchar
 }
 
 Table core_sqeuences {
@@ -107,11 +105,18 @@ Table sequence_units {
   
 }
 
+
+
+
+
 Ref: "course"."id" < "major_sequences"."course"
 
 Ref: "core_sqeuences"."course" - "course"."id"
 
 Ref: "minor_sequences"."course" > "course"."id"
+
+
+
 
 Ref: "core_sqeuences"."id" < "sequence_units"."core"
 

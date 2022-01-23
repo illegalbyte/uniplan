@@ -80,3 +80,25 @@ class Assignment(models.Model):
 	
 	def __str__(self):
 		return self.title
+
+class CoreSequence(models.Model):
+	'''
+	the model for a core sequence (mandatory units) for a course
+	Note: this is simply the name of the core sequence, not the actual units
+	'''
+	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return self.title
+
+class MajorSequence(models.Model):
+	'''
+	the model for a major sequence (optional units) for a course
+	Note: this is simply the name of the major sequence, not the actual units
+	'''
+	title = models.CharField(max_length=300, help_text="The title of the major sequence")
+	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+	
+	def __str__(self):
+		return self.title
