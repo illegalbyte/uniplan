@@ -1,12 +1,10 @@
-from pprint import pprint
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm
-from .models import Unit, Student_Profile, Enrollments, Assignment, Semester
+from .models import Unit, Enrollments, Assignment, Semester
 from .deakin_scraper import course_scraper
 
 def index(request):
