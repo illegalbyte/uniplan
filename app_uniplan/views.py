@@ -113,9 +113,13 @@ def sequences(request):
 	semesters = Semester.objects.all()
 	courses = Course.objects.all()
 	majors = MajorSequence.objects.all()
-	unitsets = UnitSet.objects.all()
+	major_sequences = UnitSet.objects.filter(major_sequence__isnull=False).all()
 	# create a dictionary of each major sequence and its units
 
-
-	context = {'enrollments': enrollments, 'courses': courses, 'majors': majors, 'units': unitsets}
+	context = {
+		'enrollments': enrollments, 
+		'courses': courses, 
+		'majors': majors, 
+		'major_sequences': major_sequences,
+		}
 	return render(request, 'app_uniplan/sequences.html', context)

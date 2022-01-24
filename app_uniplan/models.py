@@ -122,6 +122,7 @@ class UnitSet(models.Model):
 	core_sequence = models.ForeignKey(CoreSequence, on_delete=models.CASCADE, blank=True, null=True)
 	major_sequence = models.ForeignKey(MajorSequence, on_delete=models.CASCADE, blank=True, null=True)
 	minor_sequence = models.ForeignKey(MinorSequence, on_delete=models.CASCADE, blank=True, null=True)
-	
+	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
 	def __str__(self):
 		return self.unit.name + ': ' + self.sequence.title

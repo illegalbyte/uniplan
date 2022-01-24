@@ -14,16 +14,17 @@
 		{% for major in majors %}
 			<li>{{major.title}}</a></li>
 			{% comment %} Create a expandable list of the units in this major sequence {% endcomment %}
-			{% for unit in units %}
-				{% if unit.major_sequence == major %}
+			{% for unit in major_sequences %}
 					<ul>
-						<li>{{unit.title}}</li>
+						<li>{{unit}}</li>
 					</ul>
-				{% endif %}
 			{% endfor %}
 		{% endfor %}
 
 {% endfor %}
+
+
+<h2>Are we missing your major/minor? Add it now!</h2>
 
 
 {% endblock %}
