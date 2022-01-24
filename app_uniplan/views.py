@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSet
+from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm
 from .models import Unit, Enrollments, Assignment, Semester, Course
 from .deakin_scraper import course_scraper
 
@@ -113,13 +113,16 @@ def sequences(request):
 	semesters = Semester.objects.all()
 	courses = Course.objects.all()
 	majors = MajorSequence.objects.all()
-	major_sequences = UnitSet.objects.filter(major_sequence__isnull=False).all()
-	# create a dictionary of each major sequence and its units
+	# form to create a unit set
+	if request.method == 'POST':
+		pass
 
+	
+	add_unit_form = UnitSetForm
 	context = {
 		'enrollments': enrollments, 
 		'courses': courses, 
 		'majors': majors, 
-		'major_sequences': major_sequences,
+		'form': add_unit_form
 		}
 	return render(request, 'app_uniplan/sequences.html', context)

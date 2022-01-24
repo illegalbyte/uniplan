@@ -70,6 +70,8 @@ class ScrapeURLForm(forms.Form):
 class UnitSetForm(forms.ModelForm):
 	bootstrap_attributes = 'form-control'
 
+
+
 	class Meta:
 		model = UnitSet
 		fields = '__all__'

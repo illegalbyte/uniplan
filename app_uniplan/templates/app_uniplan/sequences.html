@@ -26,5 +26,8 @@
 
 <h2>Are we missing your major/minor? Add it now!</h2>
 
+<form method=POST style=".table">
+	{% csrf_token %}
+	{{ form.as_p }}
 
 {% endblock %}
