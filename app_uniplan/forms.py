@@ -42,8 +42,7 @@ class UpdateProfile(UserChangeForm):
 	class Meta:
 		model = User
 		fields = ('username', 'email', 'first_name','last_name')
-
-#TODO: Add a form for the student profile which will be used to update the student profile.
+		
 
 class CreateUnitForm(forms.ModelForm):
 	name = forms.CharField(max_length=80, required=True, help_text='Required. 50 characters or fewer.', label='Unit Name', widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -55,6 +54,7 @@ class CreateUnitForm(forms.ModelForm):
 		model = Unit
 		fields = ('name', 'unit_code', 'description', 'unitguideURL')
 
+
 class CreateAssignmentForm(forms.ModelForm):
 	bootstrap_attributes = 'form-control'
 
@@ -63,14 +63,13 @@ class CreateAssignmentForm(forms.ModelForm):
 		fields = '__all__'
 		exclude = ['created_by']
 
+
 class ScrapeURLForm(forms.Form):
 	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide', label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
 
 
 class UnitSetForm(forms.ModelForm):
 	bootstrap_attributes = 'form-control'
-
-
 
 	class Meta:
 		model = UnitSet
