@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm
+from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm
 from .models import Unit, Enrollments, Assignment, Semester, Course
 from .deakin_scraper import course_scraper
 
@@ -31,13 +31,21 @@ def signup(request):
 	return render(request, 'registration/signup.html', {'form': form, 'profile_form': profile_form})
 
 
-class UpdateProfile(generic.UpdateView):
-	form_class = UpdateProfile
-	success_url = reverse_lazy('index')
-	template_name = 'registration/edit_profile.html'
-
-	def get_object(self):
-		return self.request.user
+@login_required
+def update_profile(request):
+	if request.method =='POST':
+		user_form = UpdateUserForm(request.POST, instance=request.user)
+		profile_form = StudentProfileForm(request.POST, instance=request.user.student_profile)
+		if user_form.is_valid() and profile_form.is_valid():
+			user_form.save()
+			profile_form.save()
+			return redirect('update_profile')
+	else:
+		user_form = UpdateUserForm(instance=request.user)
+		profile_form = StudentProfileForm(instance=request.user.student_profile)
+	context = {'user_form': user_form, 'profile_form': profile_form}
+	print(context)
+	return render(request, 'registration/edit_profile.html', context)
 
 
 @login_required

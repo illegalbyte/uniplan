@@ -30,21 +30,19 @@ class StudentProfileForm(forms.ModelForm):
 		model = Student_Profile
 		fields = ('course', 'university')
 
-class UpdateProfile(UserChangeForm):
+class UpdateUserForm(forms.ModelForm):
 	bootstrap_attributes = 'form-control'
-
 	username = forms.CharField(max_length=30, required=True, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', label='Username', widget=forms.TextInput(attrs={'class': bootstrap_attributes}))
 	email = forms.EmailField(max_length=200, widget=forms.EmailInput(attrs={'class': bootstrap_attributes}))
 	first_name = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'class': bootstrap_attributes}))
 	last_name = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'class': bootstrap_attributes}))
-	password = None
 
 	class Meta:
 		model = User
-		fields = ('username', 'email', 'first_name','last_name')
-		
+		fields = ('username', 'email', 'first_name', 'last_name')
 
-class CreateUnitForm(forms.ModelForm):
+
+class CreateUnitForm(UserChangeForm):
 	name = forms.CharField(max_length=80, required=True, help_text='Required. 50 characters or fewer.', label='Unit Name', widget=forms.TextInput(attrs={'class': 'form-control'}))
 	unit_code = forms.CharField(max_length=10, required=True, help_text='Required. 10 characters or fewer.', label='Unit Code', widget=forms.TextInput(attrs={'class': 'form-control'}))
 	description = forms.CharField(max_length=200, required=False, help_text='Unit Description.', label='Unit Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
