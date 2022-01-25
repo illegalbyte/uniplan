@@ -65,7 +65,7 @@ def deakin_handbook_scraper(url: str) -> dict:
 	#             'unitguideURL': 'http://www.deakin.edu.au/current-students-courses/unit.php?unit=STP050&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022'}}
 
 
-def sequence_guide(url: str) -> list:
+def sequence_guide_scraper(url: str) -> list:
 	'''
 	Scrape a major/minor sequence page in the Deakin Handbook for units contained in that sequence.
 	Returns a list of touples the unit codes contained in the sequence.
@@ -87,5 +87,5 @@ def sequence_guide(url: str) -> list:
 
 
 def test_sequence_guide():	
-	units = sequence_guide("https://www.deakin.edu.au/current-students-courses/detail.php?customer_cd=C&service_item=S326&version_number=2&element_cd=MAJORS-STRUCTURE&sub_item_number=14&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022")
+	units = sequence_guide_scraper("https://www.deakin.edu.au/current-students-courses/detail.php?customer_cd=C&service_item=S326&version_number=2&element_cd=MAJORS-STRUCTURE&sub_item_number=14&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022")
 	print(units)
