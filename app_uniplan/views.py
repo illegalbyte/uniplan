@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUnitForm, SignupForm, UpdateProfile, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm
+from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequenceForm
 from .models import Unit, Enrollments, Assignment, Semester, Course
 from .deakin_scraper import course_scraper
 
@@ -31,13 +31,21 @@ def signup(request):
 	return render(request, 'registration/signup.html', {'form': form, 'profile_form': profile_form})
 
 
-class UpdateProfile(generic.UpdateView):
-	form_class = UpdateProfile
-	success_url = reverse_lazy('index')
-	template_name = 'registration/edit_profile.html'
-
-	def get_object(self):
-		return self.request.user
+@login_required
+def update_profile(request):
+	if request.method =='POST':
+		user_form = UpdateUserForm(request.POST, instance=request.user)
+		profile_form = StudentProfileForm(request.POST, instance=request.user.student_profile)
+		if user_form.is_valid() and profile_form.is_valid():
+			user_form.save()
+			profile_form.save()
+			return redirect('update_profile')
+	else:
+		user_form = UpdateUserForm(instance=request.user)
+		profile_form = StudentProfileForm(instance=request.user.student_profile)
+	context = {'user_form': user_form, 'profile_form': profile_form}
+	print(context)
+	return render(request, 'registration/edit_profile.html', context)
 
 
 @login_required
@@ -108,21 +116,31 @@ def batch_add_units(request):
 
 @login_required
 def sequences(request):
-	user = request.user
-	enrollments = Enrollments.objects.filter(user=user)
-	semesters = Semester.objects.all()
-	courses = Course.objects.all()
-	majors = MajorSequence.objects.all()
-	# form to create a unit set
 	if request.method == 'POST':
-		pass
+		sequence_url_form = ScrapeSequenceForm(request.POST)
+		add_unit_form = UnitSetForm(request.POST)
+		if sequence_url_form.is_valid():
+			units = course_scraper.sequence_guide_scraper(sequence_url_form.cleaned_data.get('sequence_guide_url'))
+			print(units)
+			return redirect('sequences')
+		elif add_unit_form.is_valid():
+			pass
 
-	
-	add_unit_form = UnitSetForm
-	context = {
-		'enrollments': enrollments, 
-		'courses': courses, 
-		'majors': majors, 
-		'form': add_unit_form
-		}
+	else:
+		user = request.user
+		enrollments = Enrollments.objects.filter(user=user)
+		semesters = Semester.objects.all()
+		courses = Course.objects.all()
+		majors = MajorSequence.objects.all()
+
+		
+		add_unit_form = UnitSetForm
+		scrape_url_form = ScrapeSequenceForm
+		context = {
+			'enrollments': enrollments, 
+			'courses': courses, 
+			'majors': majors, 
+			'add_unit_form': add_unit_form,
+			'scrape_url_form': scrape_url_form,
+			}
 	return render(request, 'app_uniplan/sequences.html', context)
