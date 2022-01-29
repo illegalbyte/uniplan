@@ -20,9 +20,14 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] Batch add units
 - [ ] Batch add assignments (a dropdown to select relevant unit -> one blank box for assignment, and a plus undearneath to add another blank form)
 
-## Design 
+## UI Design 
 
 - [ ] Dropdown for all accounts tasks (use django if statements to only show relevant links: eg don't show logout if not logged in)
+
+## UX Design
+
+- [ ] Homeoage should have easy access to most often needed utilities: adding assignment, updating data on assignments, 
+adding grade for an ongoing assignment, completing an assignment, displaying WAM
 
 ## Database design
 
