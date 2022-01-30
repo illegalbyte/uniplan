@@ -150,23 +150,14 @@ def unit_scraper(url: str) -> dict:
 
 	# define return dictionary
 	unit_details = {}
-	unit_details['year_relevant'] = unit_details_raw['Year:']
-	unit_details['credit_points'] = unit_details_raw['Credit point(s):']
-	unit_details['EFTSL_value'] = unit_details_raw['EFTSL value:']
-	unit_details['incompatible_with'] = unit_details_raw['Incompatible with:']
-	unit_details['prerequisite'] = unit_details_raw['Prerequisite:']
-	unit_details['corequisite'] = unit_details_raw['Corequisite:']
-	unit_details['assignments'] = assignmnents_list
-	unit_details['hurdle'] = Hurdle_Requirement_Text
-	unit_details['trimester_availability'] = Trimester_Availability
-
+	unit_details['year_relevant'] = unit_details_raw['Year:'] # string
+	unit_details['credit_points'] = unit_details_raw['Credit point(s):'] # string
+	unit_details['EFTSL_value'] = unit_details_raw['EFTSL value:'] # string
+	unit_details['incompatible_with'] = unit_details_raw['Incompatible with:'] # string
+	unit_details['prerequisite'] = unit_details_raw['Prerequisite:'] # string
+	unit_details['corequisite'] = unit_details_raw['Corequisite:'] # string
+	unit_details['assignments'] = assignmnents_list # list
+	unit_details['hurdle'] = Hurdle_Requirement_Text # string
+	unit_details['trimester_availability'] = Trimester_Availability # dict
 
 	return unit_details
-
-
-# test with cloud computing unit page
-pprint.pprint(unit_scraper(r"https://www.deakin.edu.au/current-students-courses/unit.php?unit=SIT113&year=2022&return_to=%2Fcurrent-students-courses%2Fdetail.php%3Fcustomer_cd%3DC%26element_cd%3DMAJORS-STRUCTURE%26return_to%3D%252Fcurrent-students-courses%252Fcourse.php%253Fcourse%253DS326%2526keywords%253Dbachelor%252Bof%252Binformation%252Btechnology%2526version%253D2%2526year%253D2022%26service_item%3DS326%26sub_item_number%3D14%26version_number%3D2%26year%3D2022"))
-#test with discrete mths unit page
-pprint.pprint(unit_scraper(r"https://www.deakin.edu.au/current-students-courses/unit.php?unit=SIT192&year=2022&return_to=%2Fcurrent-students-courses%2Fdetail.php%3Fcustomer_cd%3DC%26element_cd%3DMAJORS-STRUCTURE%26return_to%3D%252Fcurrent-students-courses%252Fcourse.php%253Fcourse%253DS326%2526keywords%253Dbachelor%252Bof%252Binformation%252Btechnology%2526version%253D2%2526year%253D2022%26service_item%3DS326%26sub_item_number%3D14%26version_number%3D2%26year%3D2022"))
-
-pprint.pprint(unit_scraper(r"https://www.deakin.edu.au/current-students-courses/unit.php?unit=SIT325&year=2022&return_to=%2Fcurrent-students-courses%2Fdetail.php%3Fcustomer_cd%3DC%26element_cd%3DMAJORS-STRUCTURE%26return_to%3D%252Fcurrent-students-courses%252Fcourse.php%253Fcourse%253DS326%2526keywords%253Dbachelor%252Bof%252Binformation%252Btechnology%2526version%253D2%2526year%253D2022%26service_item%3DS326%26sub_item_number%3D14%26version_number%3D2%26year%3D2022"))

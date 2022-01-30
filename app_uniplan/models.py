@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -41,7 +42,7 @@ class Unit(models.Model):
 	the model for a unit (university subject)
 	'''
 	name = models.CharField(max_length=200)
-	unit_code = models.CharField(max_length=10, unique=True, primary_key=True)
+	unit_code = models.CharField(max_length=10, unique=True, primary_key=True) #BUG: marking this as unique=True means that units with the same unit_code cannot be created
 	unitguideURL = models.URLField(blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(default=timezone.now)
@@ -49,6 +50,31 @@ class Unit(models.Model):
 
 	def __str__(self):
 		return f"{self.unit_code}: {self.name}"
+
+class UnitData(models.Model):
+	'''
+	the model for a unit's data
+	'''
+	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+	raw_data = models.JSONField()
+	created_date = models.DateTimeField(default=timezone.now)
+	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+	
+	year = models.IntegerField(default=0, validators=[MinValueValidator(2000), MaxValueValidator(2050)])
+	credit_points = models.FloatField(default=0)
+	eftsl_value = models.FloatField(default=0)
+	incompatible_units_text = models.TextField(blank=True, null=True)
+	prerequisite_units_text = models.TextField(blank=True, null=True)
+	corequisite_units_text = models.TextField(blank=True, null=True)
+	assignments_json = models.JSONField(blank=True, null=True)
+	hurdle_text = models.TextField(blank=True, null=True)
+	trimester_availability = models.ManyToManyField(Semester, blank=True)
+
+
+
+
+	def __str__(self):
+		return f"{self.unit.unit_code}: {self.semester}"
 
 class Enrollments(models.Model):
 	'''
@@ -58,7 +84,6 @@ class Enrollments(models.Model):
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
 	semester = models.ForeignKey(Semester, on_delete=models.CASCADE, null=True)
 	passed = models.BooleanField(default=False)
-
 	
 	def __str__(self):
 		return self.user.username + ' ' + self.unit.name
@@ -68,6 +93,7 @@ class Assignment(models.Model):
 	the model for an assignment
 	'''
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+	unit_data = models.ForeignKey(UnitData, on_delete=models.CASCADE, null=True)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 	weighting = models.FloatField(help_text="The % weighting of the assignment in the overall grade as a decimal (e.g. 0.5 for 50%)")
 	total_marks_available = models.IntegerField(blank=True, null=True, help_text="The total marks available for the assignment")
