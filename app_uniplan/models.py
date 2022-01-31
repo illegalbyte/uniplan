@@ -56,6 +56,7 @@ class UnitData(models.Model):
 	the model for a unit's data
 	'''
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+	unitguide_url = models.URLField(blank=True, null=True)
 	raw_data = models.JSONField()
 	created_date = models.DateTimeField(default=timezone.now)
 	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
