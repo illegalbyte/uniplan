@@ -1,6 +1,18 @@
 {% extends 'app_uniplan/base.html' %}
 
 {% block content %}
+<h1>You're currently enrolled in:</h1>
+<ul>
+		{% regroup enrollments by semester as enrollments_list %}
+		{% for semester in enrollments_list %}
+		<li>{{ semester.grouper }}</li>
+		<ul>
+			{% for enrollment in semester.list %}
+				<li><a href="{{enrollment.unit.unit_code}}">{{enrollment.unit}}</a></li>
+			{% endfor %}
+		</ul>
+		{% endfor %}
+</ul>
 
 Here are your enrollments for {{ user.student_profile.university }}: {{ user.student_profile.course }}
 <br>
@@ -10,6 +22,7 @@ Here are your enrollments for {{ user.student_profile.university }}: {{ user.stu
 <br>
 
 {% endfor %}
+
 
 
 <form method=POST>
