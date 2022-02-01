@@ -19,7 +19,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 - [ ] [Implement sessions](https://www.youtube.com/watch?v=N-R5mT-nIDk)
 - [ ] Batch add units
 - [ ] Batch add assignments (a dropdown to select relevant unit -> one blank box for assignment, and a plus undearneath to add another blank form)
-- [ ] implement REACT (MERN stack?)
+- [ ] implement REACT for handsome front-end design - research examples of Django + react 
 
 ## UI Design 
 
