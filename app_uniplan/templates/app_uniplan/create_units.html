@@ -3,9 +3,10 @@
 {% block content %}
 <h1>You're currently enrolled in:</h1>
 <ul>
+	{% comment %} This sorts your units into a list of enrollments grouped by semester {% endcomment %}
 		{% regroup enrollments by semester as enrollments_list %}
 		{% for semester in enrollments_list %}
-		<li>{{ semester.grouper }}</li>
+		<li><b>{{ semester.grouper }}:</b></li>
 		<ul>
 			{% for enrollment in semester.list %}
 				<li><a href="{{enrollment.unit.unit_code}}">{{enrollment.unit}}</a></li>
@@ -14,7 +15,7 @@
 		{% endfor %}
 </ul>
 
-Here are your enrollments for {{ user.student_profile.university }}: {{ user.student_profile.course }}
+Here are all the units currently registered for {{ user.student_profile.university }}: {{ user.student_profile.course }}
 <br>
 {% for unit in units %}
 
