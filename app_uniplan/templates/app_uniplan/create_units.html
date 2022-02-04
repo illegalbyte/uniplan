@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>You're currently enrolled in:</h1>
+{% if enrollments %}
 <ul>
 	{% comment %} This sorts your units into a list of enrollments grouped by semester {% endcomment %}
 		{% regroup enrollments by semester as enrollments_list %}
@@ -14,22 +15,44 @@
 		</ul>
 		{% endfor %}
 </ul>
+{% else %}
+	<p>You are not currently enrolled in any units.</p>
+	<a class="btn btn-success" href="{% url 'enrollment' %}">Enroll in units</a>
+{% endif %}
 
-Here are all the units currently registered for {{ user.student_profile.university }}: {{ user.student_profile.course }}
 <br>
-{% for unit in units %}
+<details>
+	<summary class="link-primary">Click to View all units registered for {{ user.student_profile.university }}: {{ user.student_profile.course }}</summary>
+	<table>
+		<tr>
+			<th>Unit Code</th>
+			<th>Unit Name</th>
+		</tr>
+	{% for unit in units %}
+		<tr>
+			<td><a href="{{ unit.unit_code }}">{{ unit.unit_code }}</a></td>
+			<td>{{ unit.name }}</td>
+		</tr>	
+	{% comment %} <a href="{{unit.unit_code}}">{{unit.unit_code}}: {{ unit.name }}</a> {% endcomment %}
+	{% comment %} <br> {% endcomment %}
+	{% endfor %}
+	</table>
+</details>
+<hr>
 
-<a href="{{unit.unit_code}}">{{unit.unit_code}}: {{ unit.name }}</a>
-<br>
+<button type="button" class="btn btn-lg btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#unit-form">
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+		<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+	</svg>
+ Add a unit manually
+</button>
+<div id="unit-form" class="collapse">
+		<form method=POST>
+			{% csrf_token %}
+			{{ unit_form.as_p }}
+			<button type="submit" class="btn btn-primary">Create Unit</button>
+		</form>
+</div>
 
-{% endfor %}
-
-
-
-<form method=POST>
-	{% csrf_token %}
-	{{ unit_form.as_p }}
-	<button type="submit">Create Unit</button>
-</form>
 
 {% endblock %}
