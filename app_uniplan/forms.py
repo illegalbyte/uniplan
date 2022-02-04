@@ -51,6 +51,7 @@ class CreateUnitForm(UserChangeForm):
 	class Meta:
 		model = Unit
 		fields = ('name', 'unit_code', 'description', 'unitguideURL')
+		exclude = ['password_id', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'user_permissions', 'groups']
 
 
 class CreateAssignmentForm(forms.ModelForm):
