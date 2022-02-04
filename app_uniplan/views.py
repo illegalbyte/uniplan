@@ -128,8 +128,6 @@ def sequences(request):
 		elif add_unit_form.is_valid():
 			# TODO: Manually add a unit (this should be on the unit details page?)
 			pass
-
-
 	else:
 		user = request.user
 		enrollments = Enrollments.objects.filter(user=user)

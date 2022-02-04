@@ -47,11 +47,11 @@ class CreateUnitForm(UserChangeForm):
 	unit_code = forms.CharField(max_length=10, required=True, help_text='Required. 10 characters or fewer.', label='Unit Code', widget=forms.TextInput(attrs={'class': 'form-control'}))
 	description = forms.CharField(max_length=200, required=False, help_text='Unit Description.', label='Unit Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
 	unitguideURL = forms.URLField(max_length=300, required=False, help_text='Unit Guide URL.', label='Unit Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+	password = None # Fixes BUG: weird password field shows up in the form
 
 	class Meta:
 		model = Unit
 		fields = ('name', 'unit_code', 'description', 'unitguideURL')
-		exclude = ['password_id', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'user_permissions', 'groups']
 
 
 class CreateAssignmentForm(forms.ModelForm):
