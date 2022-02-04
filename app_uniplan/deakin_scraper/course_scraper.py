@@ -2,6 +2,7 @@ import bs4 as bs
 import requests
 import pprint
 import colorama
+import re
 
 
 def deakin_handbook_scraper(url: str) -> dict:
@@ -59,13 +60,29 @@ def deakin_handbook_scraper(url: str) -> dict:
 	majors_list = soup.find('h2', text='Major sequences').find_next('ul').find_all('a')
 	minors_list = soup.find('h2', text='Minor sequences').find_next('ul').find_all('a')
 
-	return {'course_code': course_code, 'course_name': course_name, 'course_map_url': course_map_url, 'units': units, 'major_url_list': majors_list, 'minor_url_list': minors_list}
+	# retrieve list of core units NOTE: relies on regex to find the core units
+	html_string = str(soup)
+	stripped_core_units_html = re.findall("(?<=<h2>Core<\/h2>)(.*)(?=<h2>Electives<\/h2>)", html_string)
+	core_units_soup = bs.BeautifulSoup(str(stripped_core_units_html), 'html.parser')
+	core_units_dict = {}
+	for unit in core_units_soup.find_all('tr'):
+		unit_code = unit.find('td').text.strip()
+		core_units_dict[unit_code] = {}
+		core_units_dict[unit_code]['unit_code'] = unit.find('td').text
+		core_units_dict[unit_code]['unit_name'] = unit.find('td').find_next('td').text
+		core_units_dict[unit_code]['unitguideURL'] = unit.find('a').get('href')
 
-
+	return {'course_code': course_code, 'course_name': course_name, 'course_map_url': course_map_url, 'units': units, 'major_url_list': majors_list, 'minor_url_list': minors_list, 'core_units_dict': core_units_dict}
 	# Example of a unit dictionary entry:
 	#  'STP050': {'unit_code': 'STP050',
 	#             'unit_name': 'Academic Integrity (0 credit points)',
 	#             'unitguideURL': 'http://www.deakin.edu.au/current-students-courses/unit.php?unit=STP050&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022'}}
+
+
+def test_deakin_handbook_scraper():
+	url = "https://www.deakin.edu.au/current-students-courses/course.php?course=S326&version=2&year=2022&keywords=bachelor+of+information+technology"
+	course_data = deakin_handbook_scraper(url)
+	pprint.pprint(course_data['core_units_dict'])
 
 
 def sequence_guide_scraper(url: str) -> list:
