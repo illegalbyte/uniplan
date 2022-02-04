@@ -125,7 +125,7 @@ class MajorSequence(models.Model):
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the major sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	units = models.ManyToManyField(Unit)
+	unit_set_code = models.CharField(max_length=20, help_text="The code of the unit set", blank=True, null=True)
 		
 	def __str__(self):
 		return self.course.course_name + ': ' + self.title
@@ -137,6 +137,8 @@ class MinorSequence(models.Model):
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the minor sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	unit_set_code = models.CharField(max_length=20, help_text="The code of the unit set", blank=True, null=True)
+
 		
 	def __str__(self):
 		return self.title

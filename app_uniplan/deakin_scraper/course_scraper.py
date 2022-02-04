@@ -85,7 +85,7 @@ def test_deakin_handbook_scraper():
 	pprint.pprint(course_data['core_units_dict'])
 
 
-def sequence_guide_scraper(url: str) -> list:
+def sequence_guide_scraper(url: str) -> dict:
 	'''
 	Scrape a major/minor sequence page in the Deakin Handbook for units contained in that sequence.
 	Returns a list of touples the unit codes contained in the sequence.
@@ -94,13 +94,27 @@ def sequence_guide_scraper(url: str) -> list:
 	response.raise_for_status()
 	soup = bs.BeautifulSoup(response.text, 'html.parser')
 
+	# get the name of the sequence
+	course_name = soup.find('h1').text
+	# name of the sequence
+	sequence_name = soup.find('h2').text
+	# unit set code
+	unit_set_code = soup.find('h3').find_next('p').text	
+
 	all_units_tables = soup.find_all('table')
-	sequence_units = []
+	sequence_units_list = []
 	for table in all_units_tables: 
 		unit_code = table.find('td').text.strip()
 		unit_name = table.find('td').find_next('td').text
-		sequence_units.append(unit_code)
-	return sequence_units
+		sequence_units_list.append((unit_code, unit_name))
+
+	return {'unit_set_code': unit_set_code, 'course_name': course_name, 'sequence_name': sequence_name, 'sequence_units_list': sequence_units_list}
+	# example sequence dictionary entry:
+		# {'unit_set_code': 'MN-S000008',
+		# 'sequence_name': 'Programming',
+		# 'sequence_units_list': [(unit_code, unit_name), (unit_code, unit_name)],
+		# 'course_name': 'Bachelor of Information Technology',}
+
 
 def test_sequence_guide():	
 	units = sequence_guide_scraper("https://www.deakin.edu.au/current-students-courses/detail.php?customer_cd=C&service_item=S326&version_number=2&element_cd=MAJORS-STRUCTURE&sub_item_number=14&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022")

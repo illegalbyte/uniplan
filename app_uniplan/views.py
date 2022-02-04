@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequencesForm, ScrapeSequenceForm
-from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet
+from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, MajorSequence, MinorSequence, CoreSequence
 from .deakin_scraper import course_scraper
 
 def index(request):
@@ -130,13 +130,44 @@ def sequences(request):
 		sequence_url_form = ScrapeSequencesForm(request.POST)
 		add_unit_form = UnitSetForm(request.POST)
 		if sequence_url_form.is_valid():
+			unitguide_data = course_scraper.sequence_guide_scraper(sequence_url_form.cleaned_data.get('sequence_guide_url'))
+			majors_urls_list = unitguide_data['major_url_list']
+			minor_urls_list = unitguide_data['minor_url_list']
+			core_units_list = unitguide_data['core_units_list']
 
-			units = course_scraper.sequence_guide_scraper(sequence_url_form.cleaned_data.get('sequence_guide_url'))
-			print(units)
+			for major_url in majors_urls_list:
+				major_data = course_scraper.sequence_guide_scraper(major_url)
+				major_name = major_data['sequence_name']
+				unit_set_code = major_data['unit_set_code']
+				course_name = major_data['course_name']
+				# create a major sequence if doesn't exist
+				if not MajorSequence.objects.filter(title=major_name).exists():
+					major_sequence = MajorSequence(
+						title = major_name,
+						unit_set_code = unit_set_code,
+						course = Course.objects.get(name=course_name).id,
+					)
+					major_sequence.save()
+					print(f"SAVED MAJOR SEQUENCE: {major_name}")
+				else:
+					print(f"MAJOR SEQUENCE ALREADY EXISTS: {major_name}")
+
+				for unit in major_data['sequence_units_list']:
+					# create a unitset if doesn't exist
+					if not UnitSet.objects.filter(unit_code=unit[0]).exists():
+						unit_set = UnitSet(
+							unit_code = unit[0],
+							unit_name = unit[1],
+							major_sequence = MajorSequence.objects.get(title=major_name).id,
+						)
+						unit_set.save()
+						print(f"SAVED UNIT SET: {unit[0]}: {unit[1]}")
+
+
 			return redirect('sequences')
 		elif add_unit_form.is_valid():
 			# TODO: Manually add a unit (this should be on the unit details page?)
-			pass
+			return redirect('sequences')
 	else:
 		user = request.user
 		enrollments = Enrollments.objects.filter(user=user)
