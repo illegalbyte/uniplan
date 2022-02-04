@@ -1,7 +1,7 @@
 import bs4 as bs
 import requests
-import os
 import pprint
+import colorama
 
 
 def deakin_handbook_scraper(url: str) -> dict:
@@ -146,7 +146,11 @@ def unit_scraper(url: str) -> dict:
 				assignment_dict = {}
 	
 	# located after the h2 tag with text "Hurdle Requirements"
-	Hurdle_Requirement_Text = soup.find('h3', text='Hurdle requirement').find_next('p').text.strip()
+	Hurdle_Requirement_Text = soup.find('h3', text='Hurdle requirement')
+	if Hurdle_Requirement_Text:
+		Hurdle_Requirement_Text = Hurdle_Requirement_Text.find_next('p').text.strip()
+
+	unit_details_raw.setdefault('Incompatible with:', 'Nil')
 
 	# define return dictionary
 	unit_details = {}
@@ -161,3 +165,25 @@ def unit_scraper(url: str) -> dict:
 	unit_details['trimester_availability'] = Trimester_Availability # dict
 
 	return unit_details
+
+
+def get_all_unit_links_from_handbook(course_handbook_url: str) -> list:
+	course_data = deakin_handbook_scraper(course_handbook_url)
+	# get all the links to units
+	course_data = course_data['units']
+	list_of_unit_urls = []
+	for unit in course_data.values():
+		list_of_unit_urls.append(unit['unitguideURL'])
+
+	return list_of_unit_urls
+
+def test_scrape_list_of_unit_urls_from_guidebook():
+
+	IT_links = get_all_unit_links_from_handbook(
+		"https://www.deakin.edu.au/current-students-courses/course.php?course=S326&version=2&year=2022&keywords=bachelor+of+information+technology")
+
+	for link in IT_links:
+		print(f"{colorama.Fore.RED}{link}{colorama.Fore.RESET}")
+		pprint.pprint(unit_scraper(link))
+
+
