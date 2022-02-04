@@ -66,6 +66,12 @@ class CreateAssignmentForm(forms.ModelForm):
 class ScrapeURLForm(forms.Form):
 	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide', label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
 
+
+class ScrapeSequencesForm(forms.Form):
+	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide (eg "https://www.deakin.edu.au/current-students-courses/course.php?course=S326&version=2&year=2022&keywords=bachelor+of+information+technology")',
+	                                  label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+
 class ScrapeSequenceForm(forms.Form):
 	sequence_guide_url = forms.URLField(max_length=500, required=True, help_text='The URL to the Deakin major/minor guide', label='Sequence Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
 

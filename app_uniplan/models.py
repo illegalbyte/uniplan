@@ -10,6 +10,7 @@ class Student_Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	course = models.ForeignKey('Course', on_delete=models.CASCADE)
 	university = models.ForeignKey('University', on_delete=models.CASCADE)
+	major = models.ForeignKey('MajorSequence', on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		return str(self.user)

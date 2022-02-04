@@ -69,6 +69,14 @@
 						<a href="{% url 'signup' %}">Register</a>
 					</p>
 					{% endif %}
+					{% if request.user.is_superuser %}
+					<p class="card-text">
+						<a class="link-danger" href="/admin">Admin</a>
+					</p>
+					<p class="card-text">
+						<a class="link-danger" href="{% url 'scrape' %}">Scrape data</a>
+					</p>					
+					{% endif %}
 					<p class="card-text">
 						<a href="{% url 'password_reset' %}">Password reset</a>
 					</p>

@@ -49,14 +49,17 @@ def deakin_handbook_scraper(url: str) -> dict:
 		units_tables[unit_code]['unit_name'] = unit.find('td').find_next('td').text
 		units_tables[unit_code]['unitguideURL'] = unit.find('a').get('href')
 
-
 	# remove the duplicate units
 	units = {}
 	for key, value in units_tables.items():
 		if value not in units.values():
 			units[key] = value
 
-	return {'course_code': course_code, 'course_name': course_name, 'course_map_url': course_map_url, 'units': units}
+	# find links to majors
+	majors_list = soup.find('h2', text='Major sequences').find_next('ul').find_all('a')
+	minors_list = soup.find('h2', text='Minor sequences').find_next('ul').find_all('a')
+
+	return {'course_code': course_code, 'course_name': course_name, 'course_map_url': course_map_url, 'units': units, 'major_url_list': majors_list, 'minor_url_list': minors_list}
 
 
 	# Example of a unit dictionary entry:

@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequenceForm
-from .models import Unit, Enrollments, Assignment, Semester, Course
+from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequencesForm, ScrapeSequenceForm
+from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet
 from .deakin_scraper import course_scraper
 
 def index(request):
@@ -88,6 +88,8 @@ def enrollment(request):
 	user = request.user
 	enrollments = Enrollments.objects.filter(user=user)
 	semesters = Semester.objects.all()
+	id_of_users_major = user.student_profile.major.id
+	users_major_units_list = UnitSet.objects.filter(major_sequence=id_of_users_major).values_list('unit', flat=True)
 	context = {'enrollments': enrollments, 'years': years}
 	return render(request, 'app_uniplan/enrollment.html', context)
 
@@ -96,9 +98,10 @@ def enrollment(request):
 def batch_add_units(request):
 	if request.user.is_superuser:
 		if request.method == 'POST':
-			form = ScrapeURLForm(request.POST)
-			if form.is_valid():
-				URL = form.cleaned_data.get('course_guide_url')
+			unitguide_form = ScrapeURLForm(request.POST)
+			sequence_form = ScrapeSequencesForm(request.POST)
+			if unitguide_form.is_valid():
+				URL = unitguide_form.cleaned_data.get('course_guide_url')
 				print(f"SCRAPING URL: {URL}")
 				course_data = course_scraper.deakin_handbook_scraper(URL)
 				units = course_data['units'].values()
@@ -112,16 +115,22 @@ def batch_add_units(request):
 					unit_obj.save()
 					print(f"SAVED UNIT: {unit['unit_code']}: {unit['unit_name']}")
 				return redirect('units')
-		form = ScrapeURLForm
-		context = {'form': form}
+			if sequence_form.is_valid():
+				print("sequence form worked \n\n\n")
+				pass
+
+		unitguide_form = ScrapeURLForm
+		sequence_form = ScrapeSequencesForm
+		context = {'unitguide_form': unitguide_form, 'sequence_form': sequence_form}
 		return render(request, 'app_uniplan/scrape_deakin.html', context)
 
 @login_required
 def sequences(request):
 	if request.method == 'POST':
-		sequence_url_form = ScrapeSequenceForm(request.POST)
+		sequence_url_form = ScrapeSequencesForm(request.POST)
 		add_unit_form = UnitSetForm(request.POST)
 		if sequence_url_form.is_valid():
+
 			units = course_scraper.sequence_guide_scraper(sequence_url_form.cleaned_data.get('sequence_guide_url'))
 			print(units)
 			return redirect('sequences')
@@ -137,7 +146,7 @@ def sequences(request):
 
 		
 		add_unit_form = UnitSetForm
-		scrape_url_form = ScrapeSequenceForm
+		scrape_url_form = ScrapeSequencesForm
 		context = {
 			'enrollments': enrollments, 
 			'courses': courses, 
