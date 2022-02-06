@@ -34,6 +34,11 @@
 			</ul>
 		</div>
 		<div class="col">
+			<select name="Your Major" id="major">
+				{% for major in users_majors %}
+				<option value="volvo">Volvo</option>
+				{% endfor %}
+			</select>
 			<h1>Major units to complete:</h1>
 			<ul>
 				<li>ex 1</li>

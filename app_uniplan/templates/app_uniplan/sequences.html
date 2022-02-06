@@ -8,18 +8,29 @@
 <h1>Explore Majors, Minors, and your Course's Core Sequences</h1>
 
 
-<h2>Majors</h2>
 {% for course in courses %}
-	<h3>{{course.course_name}}</h3>
-		{% for major in majors %}
-			<li>{{major.title}}</a></li>
-			{% comment %} Create a expandable list of the units in this major sequence {% endcomment %}
+{% comment %} this courses doesn't actually filter by courses {% endcomment %}
+<h3>{{course.course_name}}</h3>
+<h2>Majors</h2>
+{% for major in majors %}
+<li>{{major.title}}</a></li>
+			{% comment %} TODO: Create a expandable list of the units in this major sequence {% endcomment %}
+			<ul>
 			{% for unit in major_sequences %}
-					<ul>
 						<li>{{unit}}</li>
-					</ul>
 			{% endfor %}
+			</ul>
 		{% endfor %}
+<h2>Minors</h2>
+{% for minor in minors %}
+	<li>{{minor.title}}</a></li>
+	{% comment %} TODO: Create a expandable list of the units in this minor sequence {% endcomment %}
+	{% for unit in minor_sequences %}
+			<ul>
+				<li>{{unit}}</li>
+			</ul>
+	{% endfor %}
+{% endfor %}
 
 {% endfor %}
 

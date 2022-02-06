@@ -88,7 +88,7 @@ def enrollment(request):
 	user = request.user
 	enrollments = Enrollments.objects.filter(user=user)
 	semesters = Semester.objects.all()
-	id_of_users_major = user.student_profile.major.id
+	id_of_users_major = user.student_profile.major
 	users_major_units_list = UnitSet.objects.filter(major_sequence=id_of_users_major).values_list('unit', flat=True)
 	context = {'enrollments': enrollments, 'years': years}
 	return render(request, 'app_uniplan/enrollment.html', context)
@@ -199,6 +199,7 @@ def sequences(request):
 		semesters = Semester.objects.all()
 		courses = Course.objects.all()
 		majors = MajorSequence.objects.all()
+		minors = MinorSequence.objects.all()
 
 		
 		add_unit_form = UnitSetForm
@@ -207,6 +208,7 @@ def sequences(request):
 			'enrollments': enrollments, 
 			'courses': courses, 
 			'majors': majors, 
+			'minors': minors,
 			'add_unit_form': add_unit_form,
 			'scrape_url_form': scrape_url_form,
 			}
