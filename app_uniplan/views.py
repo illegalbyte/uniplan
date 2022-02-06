@@ -130,10 +130,10 @@ def sequences(request):
 		sequence_url_form = ScrapeSequencesForm(request.POST)
 		add_unit_form = UnitSetForm(request.POST)
 		if sequence_url_form.is_valid():
-			unitguide_data = course_scraper.sequence_guide_scraper(sequence_url_form.cleaned_data.get('sequence_guide_url'))
+			unitguide_data = course_scraper.deakin_handbook_scraper(sequence_url_form.cleaned_data.get('course_guide_url'))
 			majors_urls_list = unitguide_data['major_url_list']
 			minor_urls_list = unitguide_data['minor_url_list']
-			core_units_list = unitguide_data['core_units_list']
+			core_units_dict = unitguide_data['core_units_dict']
 
 			for major_url in majors_urls_list:
 				major_data = course_scraper.sequence_guide_scraper(major_url)
@@ -145,24 +145,49 @@ def sequences(request):
 					major_sequence = MajorSequence(
 						title = major_name,
 						unit_set_code = unit_set_code,
-						course = Course.objects.get(name=course_name).id,
+						course = Course.objects.get(course_name=course_name),
 					)
 					major_sequence.save()
 					print(f"SAVED MAJOR SEQUENCE: {major_name}")
 				else:
 					print(f"MAJOR SEQUENCE ALREADY EXISTS: {major_name}")
-
+				# Assign the major's units to the major sequence
 				for unit in major_data['sequence_units_list']:
 					# create a unitset if doesn't exist
-					if not UnitSet.objects.filter(unit_code=unit[0]).exists():
+					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code = unit[0])).exists():
 						unit_set = UnitSet(
-							unit_code = unit[0],
-							unit_name = unit[1],
-							major_sequence = MajorSequence.objects.get(title=major_name).id,
+							unit = Unit.objects.get(unit_code=unit[0]),
+							major_sequence = MajorSequence.objects.get(title=major_name),
 						)
 						unit_set.save()
-						print(f"SAVED UNIT SET: {unit[0]}: {unit[1]}")
+						print(f"ASSIGNED UNIT {unit[0]} to {major_name}")
 
+			for minor_url in minor_urls_list:
+				minor_data = course_scraper.sequence_guide_scraper(minor_url)
+				minor_name = minor_data['sequence_name']
+				unit_set_code = minor_data['unit_set_code']
+				course_name = minor_data['course_name']
+				# create a minor sequence if doesn't exist
+				if not MinorSequence.objects.filter(title=minor_name).exists():
+					minor_sequence = MinorSequence(
+						title = minor_name,
+						unit_set_code = unit_set_code,
+						course = Course.objects.get(course_name=course_name),
+					)
+					minor_sequence.save()
+					print(f"SAVED MINOR SEQUENCE: {minor_name}")
+				else:
+					print(f"MINOR SEQUENCE ALREADY EXISTS: {minor_name}")
+				# Assign the minor's units to the minor sequence
+				for unit in minor_data['sequence_units_list']:
+					# create a unitset if doesn't exist
+					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code = unit[0])).exists():
+						unit_set = UnitSet(
+							unit = Unit.objects.get(unit_code=unit[0]),
+							minor_sequence = MinorSequence.objects.get(title=minor_name),
+						)
+						unit_set.save()
+						print(f"ASSIGNED UNIT {unit[0]} to {minor_name}")
 
 			return redirect('sequences')
 		elif add_unit_form.is_valid():

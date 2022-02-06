@@ -57,8 +57,14 @@ def deakin_handbook_scraper(url: str) -> dict:
 			units[key] = value
 
 	# find links to majors
-	majors_list = soup.find('h2', text='Major sequences').find_next('ul').find_all('a')
-	minors_list = soup.find('h2', text='Minor sequences').find_next('ul').find_all('a')
+	majors_list_a_tags = soup.find('h2', text='Major sequences').find_next('ul').find_all('a')
+	majors_list = []
+	for a_tag in majors_list_a_tags:
+		majors_list.append(a_tag.get('href'))
+	minors_list_a_tags = soup.find('h2', text='Minor sequences').find_next('ul').find_all('a')
+	minors_list = []
+	for a_tag in minors_list_a_tags:
+		minors_list.append(a_tag.get('href'))
 
 	# retrieve list of core units NOTE: relies on regex to find the core units
 	html_string = str(soup)
@@ -90,9 +96,9 @@ def sequence_guide_scraper(url: str) -> dict:
 	Scrape a major/minor sequence page in the Deakin Handbook for units contained in that sequence.
 	Returns a list of touples the unit codes contained in the sequence.
 	'''
-	response = requests.get(url)
-	response.raise_for_status()
-	soup = bs.BeautifulSoup(response.text, 'html.parser')
+	web_request = requests.get(url)
+	web_request.raise_for_status()
+	soup = bs.BeautifulSoup(web_request.text, 'html.parser')
 
 	# get the name of the sequence
 	course_name = soup.find('h1').text
