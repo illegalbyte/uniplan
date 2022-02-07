@@ -116,7 +116,7 @@ class CoreSequence(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	
 	def __str__(self):
-		return self.course.course_name + ' Core Sequence'
+		return self.course + ' Core Sequence'
 
 class MajorSequence(models.Model):
 	'''
@@ -154,4 +154,9 @@ class UnitSet(models.Model):
 	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
-		return self.unit.name + ': ' + self.sequence.title
+		if self.major_sequence:
+			return self.unit.name + ': ' + self.major_sequence
+		elif self.minor_sequence:
+			return self.unit.name + ': ' + self.minor_sequence
+		else:
+			return self.unit.name + ': ' + self.core_sequence.course.course_name

@@ -29,9 +29,9 @@
 			<h1>Core units to complete</h1>
 			<h3>{{users_course}}:</h3>
 			<ul>
-				{% comment %} {% for unit in users_core_units_list %} {% endcomment %}
-				<li>{{users_core_units_list}}</li>
-				{% comment %} {% endfor %} {% endcomment %}
+				{% for unitset in users_core_units_list %}
+				<li>{{unitset.unit.unit_code}}: {{unitset.unit.name}}</li>
+				{% endfor %}
 			</ul>
 		</div>
 		<div class="col">
