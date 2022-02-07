@@ -26,20 +26,21 @@
 <div class="container">
 	<div class="row align-items-start">
 		<div class="col">
-			<h1>Core units to complete:</h1>
+			<h1>Core units to complete</h1>
+			<h3>{{users_course}}:</h3>
 			<ul>
-				<li>ex 1</li>
-				<li>ex 1</li>
-				<li>ex 1</li>
+				{% comment %} {% for unit in users_core_units_list %} {% endcomment %}
+				<li>{{users_core_units_list}}</li>
+				{% comment %} {% endfor %} {% endcomment %}
 			</ul>
 		</div>
 		<div class="col">
+			<h1>Major units to complete:</h1>
 			<select name="Your Major" id="major">
 				{% for major in users_majors %}
-				<option value="volvo">Volvo</option>
+					<option value="{{major.title}}">{{major.title}}</option>
 				{% endfor %}
 			</select>
-			<h1>Major units to complete:</h1>
 			<ul>
 				<li>ex 1</li>
 				<li>ex 1</li>
@@ -47,7 +48,7 @@
 			</ul>	
 		</div>
 		<div class="col">
-			<h1>Core units to complete:</h1>
+			<h1>Minor units to complete:</h1>
 			<ul>
 				<li>ex 1</li>
 				<li>ex 1</li>
