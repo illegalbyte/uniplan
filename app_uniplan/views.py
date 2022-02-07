@@ -128,6 +128,10 @@ def batch_add_units(request):
 
 @login_required
 def sequences(request):
+	# TODO: 
+	'''
+	IN ORDER FOR THESE TO WORK, THE UNITS MUST ALREADY EXIST IN THE DATABASE WHICH OCCURS ONLY THROUGH THE SCRAPE_DEAKIN VIEW CURRENTLY
+	'''
 	if request.method == 'POST':
 		sequence_url_form = ScrapeSequencesForm(request.POST)
 		add_unit_form = UnitSetForm(request.POST)
@@ -136,7 +140,7 @@ def sequences(request):
 			majors_urls_list = unitguide_data['major_url_list']
 			minor_urls_list = unitguide_data['minor_url_list']
 			core_units_dict = unitguide_data['core_units_dict']
-
+			# ASSIGN UNITS IN MAJOR SEQUENCE AS A UNITSET ENTRY IN DB
 			for major_url in majors_urls_list:
 				major_data = course_scraper.sequence_guide_scraper(major_url)
 				major_name = major_data['sequence_name']
@@ -156,14 +160,14 @@ def sequences(request):
 				# Assign the major's units to the major sequence
 				for unit in major_data['sequence_units_list']:
 					# create a unitset if doesn't exist
-					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code = unit[0])).exists():
+					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code=unit[0]), major_sequence=MajorSequence.objects.get(title=major_name)).exists():
 						unit_set = UnitSet(
 							unit = Unit.objects.get(unit_code=unit[0]),
 							major_sequence = MajorSequence.objects.get(title=major_name),
 						)
 						unit_set.save()
-						print(f"ASSIGNED UNIT {unit[0]} to {major_name}")
-
+						print(f"ASSIGNED UNIT <{unit[0]}> to MAJOR: {major_name}")
+			# ASSIGN UNITS IN MINOR SEQUENCE AS A UNITSET ENTRY IN DB
 			for minor_url in minor_urls_list:
 				minor_data = course_scraper.sequence_guide_scraper(minor_url)
 				minor_name = minor_data['sequence_name']
@@ -183,13 +187,32 @@ def sequences(request):
 				# Assign the minor's units to the minor sequence
 				for unit in minor_data['sequence_units_list']:
 					# create a unitset if doesn't exist
-					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code = unit[0])).exists():
+					if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code=unit[0]), minor_sequence=MinorSequence.objects.get(title=minor_name)).exists():
 						unit_set = UnitSet(
 							unit = Unit.objects.get(unit_code=unit[0]),
 							minor_sequence = MinorSequence.objects.get(title=minor_name),
 						)
 						unit_set.save()
-						print(f"ASSIGNED UNIT {unit[0]} to {minor_name}")
+						print(f"ASSIGNED UNIT <{unit[0]}> to MINOR: {minor_name}")
+			# ASSIGN CORE UNITS AS A UNITSET ENTRY IN DB
+			# create a core sequence if doesn't exist
+			relevant_course = Course.objects.get(course_name=unitguide_data['course_name'])
+			if not CoreSequence.objects.filter(course=relevant_course).exists():
+				core_sequence = CoreSequence(
+					course=Course.objects.get(course_name=relevant_course),
+				)
+				core_sequence.save()
+				print(f"SAVED CORE SEQUENCE: {course_name}")
+
+			for core_unit in core_units_dict.values():
+				# create a unitset if doesn't exist
+				if not UnitSet.objects.filter(unit=Unit.objects.get(unit_code=core_unit['unit_code']), core_sequence=CoreSequence.objects.get(course=relevant_course)).exists():
+					unit_set = UnitSet(
+						unit = Unit.objects.get(unit_code=core_unit['unit_code']),
+						core_sequence=CoreSequence.objects.get(course=relevant_course),
+					)
+					unit_set.save()
+					print(f"ASSIGNED UNIT <{core_unit['unit_code']}> to CORE SEQUENCE for: {relevant_course}")
 
 			return redirect('sequences')
 		elif add_unit_form.is_valid():
