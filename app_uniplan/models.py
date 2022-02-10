@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -11,6 +10,7 @@ class Student_Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	course = models.ForeignKey('Course', on_delete=models.CASCADE)
 	university = models.ForeignKey('University', on_delete=models.CASCADE)
+	major = models.ForeignKey('MajorSequence', on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		return str(self.user)
@@ -42,7 +42,7 @@ class Unit(models.Model):
 	the model for a unit (university subject)
 	'''
 	name = models.CharField(max_length=200)
-	unit_code = models.CharField(max_length=10, unique=True, primary_key=True) #BUG: marking this as unique=True means that units with the same unit_code cannot be created
+	unit_code = models.CharField(max_length=10, unique=True, primary_key=True) #BUG: marking this as the Primary Key and unique=True means that units with the same unit_code cannot be created
 	unitguideURL = models.URLField(blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(default=timezone.now)
@@ -116,7 +116,7 @@ class CoreSequence(models.Model):
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	
 	def __str__(self):
-		return self.course.course_name + ' Core Sequence'
+		return self.course + ' Core Sequence'
 
 class MajorSequence(models.Model):
 	'''
@@ -125,7 +125,7 @@ class MajorSequence(models.Model):
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the major sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	units = models.ManyToManyField(Unit)
+	unit_set_code = models.CharField(max_length=20, help_text="The code of the unit set", blank=True, null=True)
 		
 	def __str__(self):
 		return self.course.course_name + ': ' + self.title
@@ -137,6 +137,8 @@ class MinorSequence(models.Model):
 	'''
 	title = models.CharField(max_length=300, help_text="The title of the minor sequence")
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
+	unit_set_code = models.CharField(max_length=20, help_text="The code of the unit set", blank=True, null=True)
+
 		
 	def __str__(self):
 		return self.title
@@ -152,4 +154,9 @@ class UnitSet(models.Model):
 	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
-		return self.unit.name + ': ' + self.sequence.title
+		if self.major_sequence:
+			return self.unit.name + ': ' + self.major_sequence
+		elif self.minor_sequence:
+			return self.unit.name + ': ' + self.minor_sequence
+		else:
+			return self.unit.name + ': ' + self.core_sequence.course.course_name

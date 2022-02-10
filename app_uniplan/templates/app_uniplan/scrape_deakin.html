@@ -3,11 +3,23 @@
 {% block content %}
 
 Welcome admin!
-
+<br>
+<hr>
+<h2>Scrape only units</h2>
+<p class="text-secondary">This form will scrape data all units mentioned in the unit guide and add these to the database</p>
 <form action="{%url 'scrape'%}" method=POST>
 	{% csrf_token %}
-	{{ form.as_p}}
-	<button type="submit">Add Units</button>
+	{{ unitguide_form.as_p}}
+	<button class="btn btn-primary" type="submit">Add Units</button>
+</form>
+<hr>
+
+<h2>Scrape sequences (majors, minors)</h2>
+<p class="text-secondary">This form will scrape data on sequences, and add their respective units into the database under the "unitset" model</p>
+<form action="{%url 'scrape'%}" method=POST>
+	{% csrf_token %}
+	{{ sequence_form.as_p}}
+	<button class="btn btn-primary" type="submit">Add major/minor sequences</button>
 </form>
 
 {% endblock %}

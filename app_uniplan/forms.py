@@ -47,6 +47,7 @@ class CreateUnitForm(UserChangeForm):
 	unit_code = forms.CharField(max_length=10, required=True, help_text='Required. 10 characters or fewer.', label='Unit Code', widget=forms.TextInput(attrs={'class': 'form-control'}))
 	description = forms.CharField(max_length=200, required=False, help_text='Unit Description.', label='Unit Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
 	unitguideURL = forms.URLField(max_length=300, required=False, help_text='Unit Guide URL.', label='Unit Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+	password = None # Fixes BUG: weird password field shows up in the form
 
 	class Meta:
 		model = Unit
@@ -64,6 +65,12 @@ class CreateAssignmentForm(forms.ModelForm):
 
 class ScrapeURLForm(forms.Form):
 	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide', label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+
+class ScrapeSequencesForm(forms.Form):
+	course_guide_url = forms.URLField(max_length=400, required=True, help_text='The URL to the Deakin course guide (eg "https://www.deakin.edu.au/current-students-courses/course.php?course=S326&version=2&year=2022&keywords=bachelor+of+information+technology")',
+	                                  label='Course Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))
+
 
 class ScrapeSequenceForm(forms.Form):
 	sequence_guide_url = forms.URLField(max_length=500, required=True, help_text='The URL to the Deakin major/minor guide', label='Sequence Guide URL', widget=forms.URLInput(attrs={'class': 'form-control'}))

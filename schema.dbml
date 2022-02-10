@@ -7,9 +7,10 @@ Table users as u {
 
 Table student_profile {
   id int [pk, increment]
-  user int
-  course int
-  university int
+  user FK
+  course FK
+  university FK
+  major FK
 }
 
 Ref: u.id - student_profile.user
@@ -81,12 +82,14 @@ Table major_sequences {
   id int [pk, increment]
   title varchar
   course FK_course
+  unit_set_code varchar
 }
 
 Table minor_sequences {
   id int [pk, increment]  
   title varchar
   course FK_course
+  unit_set_code varchar
 }
 
 Table core_sqeuences {
@@ -94,14 +97,12 @@ Table core_sqeuences {
   course FK_course [note: 'one-to-one relationship between core_sequence units and course']
 }
 
-Table sequence_units {
+Table unitset {
   id int [pk, increment, note: 'This table resolves the many to many relationships between the sequences and units']
   unit FK_Unit 
-  major FK_major
-  minor FK_minor
-  core FK_core
-  
-  
+  major_sequence FK_major
+  minor_sequence FK_minor
+  core_sequence FK_core
   
 }
 
@@ -118,10 +119,12 @@ Ref: "minor_sequences"."course" > "course"."id"
 
 
 
-Ref: "core_sqeuences"."id" < "sequence_units"."core"
+Ref: "core_sqeuences"."id" < "unitset"."core_sequence"
 
-Ref: "major_sequences"."id" < "sequence_units"."major"
+Ref: "major_sequences"."id" < "unitset"."major_sequence"
 
-Ref: "minor_sequences"."id" < "sequence_units"."minor"
+Ref: "minor_sequences"."id" < "unitset"."minor_sequence"
 
-Ref: "unit"."unit_code" < "sequence_units"."unit"
+Ref: "unit"."unit_code" < "unitset"."unit"
+
+Ref: "student_profile"."major" > "major_sequences"."id"

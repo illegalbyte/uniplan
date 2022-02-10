@@ -70,3 +70,13 @@ There are some limitations so far:
 # form.as_table
 
 I'm putting this here as a reminder to try format my forms a bit differently
+
+
+# add detailed unit data:
+
+web scraping work is largely done for now, I want to pivot to working on the assignments and grade tracking - all this enrollment is doing my head in and I'll benefit from thinking about something else for now. 
+-> TODO: 
+
+[ ] Units lack relevant data about how many credit points they are worth. I'll need to implement updating the existing database entries with this data, because currently the only way unit data is changed is at the time of creation OR via the admin panel. Maybe I will implement a CRUD API to make this easier. 
+
+[ ] Assignments, grades, etc
