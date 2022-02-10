@@ -28,7 +28,7 @@ This document is an ongoing record of my design process (mistakes and all) – h
 ## UX Design
 
 - [ ] Homeoage should have easy access to most often needed utilities: adding assignment, updating data on assignments, 
-adding grade for an ongoing assignment, completing an assignment, displaying WAM
+adding grade for an ongoing assignment, completing an assignment, displaying WAM, a list of upcoming assignments, a calendar view (or something more useful and bespoke?) a list of weeks starting on sunday, through to Saturday, and each line is a uni week with demarkations for the week number, census dates etc etc)
 
 ## Database design
 
