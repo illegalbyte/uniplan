@@ -4,6 +4,16 @@ import pprint
 import colorama
 import re
 
+# coloured formatter
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import Terminal256Formatter
+from pprint import pformat
+
+def pprint_color(obj):
+    print(highlight(pformat(obj), PythonLexer(), Terminal256Formatter()))
+
+
 
 def deakin_handbook_scraper(url: str) -> dict:
 	'''
@@ -135,6 +145,7 @@ def unit_scraper(url: str) -> dict:
 	{'unit_code': 'STP050',
 	 'unit_name': 'Academic Integrity (0 credit points)',
 	 'unitguideURL': 'http://www.deakin.edu.au/current-students-courses/unit.php?unit=STP050&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Dbachelor%2Bof%2Binformation%2Btechnology%26version%3D2%26year%3D2022'}
+	 cont...
 	'''
 	response = requests.get(url)
 	response.raise_for_status()
@@ -147,7 +158,6 @@ def unit_scraper(url: str) -> dict:
 		column = row.find_all('td')
 		if header and column:
 			unit_details_raw[header.text.strip()] = column[0].text.strip()
-	# pprint.pprint(unit_details_raw) # for debugging
 
 	# create dictionary for a unit's availability in each trimester at each campus
 	Trimester_Availability = {}
@@ -225,4 +235,10 @@ def test_scrape_list_of_unit_urls_from_guidebook():
 		print(f"{colorama.Fore.RED}{link}{colorama.Fore.RESET}")
 		pprint.pprint(unit_scraper(link))
 
+
+def test_getting_unit_data():
+	unit_url = r"https://www.deakin.edu.au/current-students-courses/unit.php?unit=SIT124&year=2022&return_to=%2Fcurrent-students-courses%2Fcourse.php%3Fcourse%3DS326%26keywords%3Da%26version%3D2%26year%3D2022"
+	unit_data = unit_scraper(unit_url)
+	pprint_color(unit_data)
+# test_getting_unit_data()
 
