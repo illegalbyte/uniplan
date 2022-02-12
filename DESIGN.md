@@ -80,3 +80,8 @@ web scraping work is largely done for now, I want to pivot to working on the ass
 [ ] Units lack relevant data about how many credit points they are worth. I'll need to implement updating the existing database entries with this data, because currently the only way unit data is changed is at the time of creation OR via the admin panel. Maybe I will implement a CRUD API to make this easier. 
 
 [ ] Assignments, grades, etc
+
+
+## Feature ideas
+
+[ ] Ability to rate units on different dimensions: teaching quality, difficulty, etc etc - can use a glassdoor mechanism to get users to review a unit in order to view other units
