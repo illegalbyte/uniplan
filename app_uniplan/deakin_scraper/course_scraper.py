@@ -185,7 +185,6 @@ def unit_scraper(url: str) -> dict:
 				assignmnents_list.append(assignment_dict)
 				assignment_dict = {}
 	
-	# located after the h2 tag with text "Hurdle Requirements"
 	Hurdle_Requirement_Text = soup.find('h3', text='Hurdle requirement')
 	if Hurdle_Requirement_Text:
 		Hurdle_Requirement_Text = Hurdle_Requirement_Text.find_next('p').text.strip()
