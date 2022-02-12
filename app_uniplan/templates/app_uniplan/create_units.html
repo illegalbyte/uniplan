@@ -21,6 +21,29 @@
 {% endif %}
 
 
+<h2>Enroll in a unit</h2>
+<form action="">
+<select name="enrollunit" id="enrollselect">
+	{% for unit in units %}
+		<option value="{{unit.unit_code}}">{{unit}}</option>
+	{% endfor %}
+</select>
+<select name="semester" id="semesterselect" style="width:15%">
+		{% for semester in semesters %}
+			<option value="{{semester}}">{{semester}}</option>
+		{% endfor %}
+</select>
+<input type="submit" value="Enroll">
+</form>
+
+<script>
+$(document).ready(function() {
+    $('#enrollselect').select2();
+	$('#semesterselect').select2();
+
+});
+</script>
+
 
 <br>
 <details>

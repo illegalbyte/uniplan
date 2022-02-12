@@ -63,8 +63,9 @@ def create_units(request):
 	unit_form = CreateUnitForm
 	units = Unit.objects.all()
 	enrollments = Enrollments.objects.filter(user=request.user)  # units the user is enrolled in
+	semesters = Semester.objects.all()
 
-	context = {'units': units, 'unit_form': unit_form, 'enrollments': enrollments}
+	context = {'units': units, 'unit_form': unit_form, 'enrollments': enrollments, 'semesters': semesters}
 	return render(request, 'app_uniplan/create_units.html', context)
 
 
