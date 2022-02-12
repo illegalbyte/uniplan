@@ -4,8 +4,10 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequencesForm, ScrapeSequenceForm
-from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, MajorSequence, MinorSequence, CoreSequence
+from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, MajorSequence, MinorSequence, CoreSequence, UnitData, UnitAvailability
 from .deakin_scraper import course_scraper
+from django.utils import timezone
+import json
 
 def index(request):
 	return render(request, 'app_uniplan/index.html')
@@ -69,7 +71,8 @@ def create_units(request):
 @login_required
 def unit_detail(request, pk):
 	unit = Unit.objects.get(pk=pk)
-	context = {'unit': unit}
+	unit_info = UnitData.objects.get(unit=unit, year=timezone.now().year)
+	context = {'unit': unit, 'unit_info': unit_info}
 	return render(request, 'app_uniplan/unit_detail.html', context)
 
 
@@ -116,6 +119,46 @@ def batch_add_units(request):
 					)
 					unit_obj.save()
 					print(f"SAVED UNIT: {unit['unit_code']}: {unit['unit_name']}")
+					# begin creation of UnitData object to store info about assignments, prerequisites, semester availability
+					unit_data = course_scraper.unit_scraper(unit['unitguideURL'])
+					# crete unit availability entries in db for this unit
+					relevant_year = int(unit_data['year_relevant'][0:4]) # FIXME: Relies on the first 4 chars of the string to be the actual year, vulnerable to format discrepancies
+					print(unit_data['trimester_availability'])
+					for trimester, data in unit_data['trimester_availability'].items():
+						burwood, cloud, geelong = False, False, False
+						if data['Burwood'] == True:
+							burwood = True
+						if data['Cloud'] == True:
+							cloud = True
+						if data['Geelong'] == True:
+							geelong = True
+						print(f"year: {relevant_year}, index: {trimester}")
+						unitavailability_obj = UnitAvailability(
+							unit = unit_obj,
+							# FIXME: in order to query for future unknown semesters which don't have a unit guide, we could simply reference whether it has been available in the past at the same trimester
+							semester=Semester.objects.get(year=relevant_year, index=trimester),
+							burwood = burwood,
+							cloud = cloud,
+							geelong = geelong
+						)
+						print(f"CREATED \"UNIT_AVAILABILITY\": {unit['unit_code']}: <{relevant_year}> Semester {str(trimester)}")
+					unitavailability_obj.save()
+					unitdata_obj = UnitData(
+						unit = unit_obj,
+						unitguide_url = unit['unitguideURL'],
+						raw_data = json.dumps(unit_data),
+						year = relevant_year,  
+						credit_points = float(unit_data['credit_points']),
+						eftsl_value = float(unit_data['EFTSL_value']),
+						incompatible_units_text = unit_data['incompatible_with'],
+						prerequisite_units_text = unit_data['prerequisite'],
+						corequisite_units_text=unit_data['corequisite'],
+						assignments_json = json.dumps(unit_data['assignments']),
+						trimester_availability_json = json.dumps(unit_data['trimester_availability']),
+						hurdle_text = unit_data['hurdle'],
+					)
+					unitdata_obj.save()
+					print(f"CREATED UnitData for {unit['unit_code']}: ID {unitdata_obj.id}")
 				return redirect('units')
 			if sequence_form.is_valid():
 				print("sequence form worked \n\n\n")
@@ -128,10 +171,8 @@ def batch_add_units(request):
 
 @login_required
 def sequences(request):
-	# TODO: 
-	'''
-	IN ORDER FOR THESE TO WORK, THE UNITS MUST ALREADY EXIST IN THE DATABASE WHICH OCCURS ONLY THROUGH THE SCRAPE_DEAKIN VIEW CURRENTLY
-	'''
+	# BUG: IN ORDER FOR THESE TO WORK, THE UNITS MUST ALREADY EXIST IN THE DATABASE WHICH OCCURS ONLY THROUGH THE SCRAPE_DEAKIN VIEW CURRENTLY
+
 	if request.method == 'POST':
 		sequence_url_form = ScrapeSequencesForm(request.POST)
 		add_unit_form = UnitSetForm(request.POST)
