@@ -68,7 +68,6 @@ def create_units(request):
 	return render(request, 'app_uniplan/create_units.html', context)
 
 
-@login_required
 def unit_detail(request, pk):
 	unit = Unit.objects.get(pk=pk)
 	unit_info = UnitData.objects.get(unit=unit, year=timezone.now().year)
