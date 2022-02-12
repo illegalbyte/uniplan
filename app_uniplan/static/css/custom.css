@@ -1,0 +1,11 @@
+tr > td {
+	border: 1px solid #ddd;
+	border-spacing: 3px;
+}
+.weekname {
+	border: none;
+}
+
+.weektable {
+	border-spacing: 1px 1px;
+}

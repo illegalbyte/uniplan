@@ -2,6 +2,73 @@
 
 {% block content %}
 
-Welcome to the UniPlan!
+
+<div class="container">
+	{% comment %} row of 3 widgets {% endcomment %}
+	<div class="row mb-4">
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
+					<div class="card-title">
+						<h3>Upcoming Assignments</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
+					<div class="card-title">
+						<h3>This semesters units:</h3>
+					</div>
+					<div class="card-body">
+						{% for units in currentenrollments %}
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
+					<div class="card-title">
+						<h3>Current WAM: {{WAM}}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% comment %} row containing weeks view {% endcomment %}
+	<div class="row">
+		<table class="table weektable">
+			<thead class="thead-dark" style="border-spacing: 4px">
+				<tr {% comment %} style="border-bottom: 1px solid #EAB543;"> {% endcomment %}>
+					<th scope="col" class="text-left" style="width:3%">Week</th>
+					<th scope="col" class="text-center" style="width:14%">Monday</th>
+					<th scope="col" class="text-center" style="width:14%">Tuesday</th>
+					<th scope="col" class="text-center" style="width:14%">Wednesday</th>
+					<th scope="col" class="text-center" style="width:14%">Thursday</th>
+					<th scope="col" class="text-center" style="width:14%">Friday</th>
+					<th scope="col" class="text-center" style="width:14%">Saturday</th>
+					<th scope="col" class="text-center" style="width:14%">Sunday</th>
+				</tr>
+			</thead>
+			<tr style="height:2%;">
+				<td style="border:none;"></td>
+			</tr>
+			<tr class="mt-2">
+				<td class="weekname">Break</td>
+				<td></td>
+				<td>hello</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
 
 {% endblock %}
