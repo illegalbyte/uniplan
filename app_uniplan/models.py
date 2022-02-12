@@ -37,6 +37,14 @@ class Semester(models.Model):
 	def __str__(self):
 		return f"{self.year}-Semester {self.index}"
 
+class UnitAvailability(models.Model):
+	unit = models.ForeignKey('Unit', on_delete=models.CASCADE)
+	semester = models.ForeignKey('Semester', on_delete=models.CASCADE)
+	burwood = models.BooleanField(default=False)
+	cloud = models.BooleanField(default=False)
+	geelong = models.BooleanField(default=False)
+
+
 class Unit(models.Model):
 	'''
 	the model for a unit (university subject)
@@ -60,22 +68,18 @@ class UnitData(models.Model):
 	raw_data = models.JSONField()
 	created_date = models.DateTimeField(default=timezone.now)
 	created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-	
-	year = models.IntegerField(default=0, validators=[MinValueValidator(2000), MaxValueValidator(2050)])
+	year = models.IntegerField(default=2000, validators=[MinValueValidator(2000), MaxValueValidator(2050)])
 	credit_points = models.FloatField(default=0)
 	eftsl_value = models.FloatField(default=0)
 	incompatible_units_text = models.TextField(blank=True, null=True)
 	prerequisite_units_text = models.TextField(blank=True, null=True)
 	corequisite_units_text = models.TextField(blank=True, null=True)
 	assignments_json = models.JSONField(blank=True, null=True)
+	trimester_availability_json = models.JSONField(blank=True, null=True)
 	hurdle_text = models.TextField(blank=True, null=True)
-	trimester_availability = models.ManyToManyField(Semester, blank=True)
-
-
-
 
 	def __str__(self):
-		return f"{self.unit.unit_code}: {self.semester}"
+		return f"{self.unit.unit_code}: {self.year}"
 
 class Enrollments(models.Model):
 	'''
