@@ -22,15 +22,16 @@
 
 {% comment %} enroll in a unit form {% endcomment %}
 <h2>Enroll in a unit</h2>
-<form method="POST" action="">
-<select name="enrollunit" id="enrollselect">
+<form method="POST" action="{% url "enroll_unit_api" %}">
+	{% csrf_token %}
+<select name="unit" id="enrollselect">
 	{% for unit in units %}
 		<option value="{{unit.unit_code}}">{{unit}}</option>
 	{% endfor %}
 </select>
 <select name="semester" id="semesterselect" style="width:15%">
 		{% for semester in semesters %}
-			<option value="{{semester}}">{{semester}}</option>
+			<option name="semester" value="{{semester.id}}">{{semester}}</option>
 		{% endfor %}
 </select>
 <input type="submit" value="Enroll">

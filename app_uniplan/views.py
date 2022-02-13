@@ -1,3 +1,4 @@
+from django.http import QueryDict
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
@@ -16,6 +17,7 @@ from rest_framework.decorators import api_view
 from .serializers import EnrollmentsSerializer
 
 # TODO: secure via authentication!!!
+
 @api_view(['GET', 'POST'])
 def enrollment_get_api(request):
 	if request.method == 'GET':
@@ -23,10 +25,14 @@ def enrollment_get_api(request):
 		serializer = EnrollmentsSerializer(enrollments, many=True)
 		return Response(serializer.data)
 	if request.method == 'POST':
-		serializer = EnrollmentsSerializer(data=request.data)
+		user = request.user
+		mutable_request = QueryDict.copy(request.data)
+		mutable_request['user'] = user.id
+		serializer = EnrollmentsSerializer(data=mutable_request)
 		if serializer.is_valid():
-			serializer.save(user=request.user)
-			return Response(serializer.data, status=201)
+			serializer.save()
+			# return Response(serializer.data, status=201)
+			return redirect('units')
 		return Response(serializer.errors, status=400)
 
 # PAGE VIEWS
