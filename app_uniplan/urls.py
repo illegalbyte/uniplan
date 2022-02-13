@@ -14,5 +14,5 @@ urlpatterns = [
 	path('scrape/', views.batch_add_units, name='scrape'),
 	path('sequences/', views.sequences, name='sequences'),
 	# API URLS
-	path('api/enroll/', views.EnrollmentsAPI.as_view(), name='enroll_unit_api'),
+	path('api/enroll/', views.enrollment_get_api, name='enroll_unit_api'),
 ]

@@ -16,14 +16,13 @@ from rest_framework.decorators import api_view
 from .serializers import EnrollmentsSerializer
 
 # TODO: secure via authentication!!!
-class EnrollmentsAPI(APIView):
-	serializer_class = EnrollmentsSerializer
-	permission_classes = [permissions.IsAuthenticated]
-	def get(self, request):
+@api_view(['GET', 'POST'])
+def enrollment_get_api(request):
+	if request.method == 'GET':
 		enrollments = Enrollments.objects.filter(user=request.user)
 		serializer = EnrollmentsSerializer(enrollments, many=True)
 		return Response(serializer.data)
-	def post(self, request):
+	if request.method == 'POST':
 		serializer = EnrollmentsSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save(user=request.user)
