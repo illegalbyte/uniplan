@@ -8,10 +8,26 @@ from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, Ma
 from .deakin_scraper import course_scraper
 from django.utils import timezone
 import json
+# restframework imports
+from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import EnrollmentsSerializer
 
+# API VIEWS
+@api_view(['POST', 'GET'])
+def enroll_unit_api(request):
+	serializer = EnrollmentsSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+		return Response(serializer.data)
+	else:
+		return Response(serializer.errors, status=400)
+
+# PAGE VIEWS
 def index(request):
 	return render(request, 'app_uniplan/index.html')
-
 
 def signup(request):
 	if request.method == 'POST':
