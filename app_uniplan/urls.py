@@ -13,5 +13,6 @@ urlpatterns = [
 	path('enrollment/', views.enrollment, name='enrollment'),
 	path('scrape/', views.batch_add_units, name='scrape'),
 	path('sequences/', views.sequences, name='sequences'),
-	path('api/', views.enroll_unit_api, name='enroll_unit_api'),
+	# API URLS
+	path('api/enroll/', views.EnrollmentsAPI.as_view(), name='enroll_unit_api'),
 ]

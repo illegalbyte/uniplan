@@ -15,14 +15,19 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import EnrollmentsSerializer
 
-# API VIEWS
-@api_view(['POST', 'GET'])
-def enroll_unit_api(request):
-	serializer = EnrollmentsSerializer(data=request.data)
-	if serializer.is_valid():
-		serializer.save()
+# TODO: secure via authentication!!!
+class EnrollmentsAPI(APIView):
+	serializer_class = EnrollmentsSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	def get(self, request):
+		enrollments = Enrollments.objects.filter(user=request.user)
+		serializer = EnrollmentsSerializer(enrollments, many=True)
 		return Response(serializer.data)
-	else:
+	def post(self, request):
+		serializer = EnrollmentsSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save(user=request.user)
+			return Response(serializer.data, status=201)
 		return Response(serializer.errors, status=400)
 
 # PAGE VIEWS
