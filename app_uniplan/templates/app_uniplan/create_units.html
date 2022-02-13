@@ -20,9 +20,9 @@
 	<a class="btn btn-success" href="{% url 'enrollment' %}">Enroll in units</a>
 {% endif %}
 
-
+{% comment %} enroll in a unit form {% endcomment %}
 <h2>Enroll in a unit</h2>
-<form action="">
+<form method="POST" action="">
 <select name="enrollunit" id="enrollselect">
 	{% for unit in units %}
 		<option value="{{unit.unit_code}}">{{unit}}</option>
@@ -35,7 +35,7 @@
 </select>
 <input type="submit" value="Enroll">
 </form>
-
+{% comment %} select2 jquery {% endcomment %}
 <script>
 $(document).ready(function() {
     $('#enrollselect').select2();
