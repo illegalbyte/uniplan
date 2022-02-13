@@ -3,18 +3,18 @@
 {% block content %}
 <h1>You're currently enrolled in:</h1>
 {% if enrollments %}
-<ul>
 	{% comment %} This sorts your units into a list of enrollments grouped by semester {% endcomment %}
 		{% regroup enrollments by semester as enrollments_list %}
+		<ul>
 		{% for semester in enrollments_list %}
-		<li><b>{{ semester.grouper }}:</b></li>
+		<li><b>{{ semester.grouper }}</b>
 		<ul>
 			{% for enrollment in semester.list %}
-				<li><a href="{{enrollment.unit.unit_code}}">{{enrollment.unit}}</a></li>
+				<li><a href="{% url "delete_enrollment_api" pk=enrollment.id %}"><i id="trash" class="fa-solid fa-trash"></i></a>&nbsp;&nbsp;<a href="{{enrollment.unit.unit_code}}">{{enrollment.unit}}</a></li> 
 			{% endfor %}
 		</ul>
+	</li>
 		{% endfor %}
-</ul>
 {% else %}
 	<p>You are not currently enrolled in any units.</p>
 	<a class="btn btn-success" href="{% url 'enrollment' %}">Enroll in units</a>
@@ -34,7 +34,7 @@
 			<option name="semester" value="{{semester.id}}">{{semester}}</option>
 		{% endfor %}
 </select>
-<input type="submit" value="Enroll">
+<input class="btn btn-success" type="submit" value="Enroll">
 </form>
 {% comment %} select2 jquery {% endcomment %}
 <script>

@@ -26,6 +26,7 @@ def enrollment_get_api(request):
 		return Response(serializer.data)
 	if request.method == 'POST':
 		user = request.user
+		# in order for is_valid() to pass, we need to manually enter the user parameter
 		mutable_request = QueryDict.copy(request.data)
 		mutable_request['user'] = user.id
 		serializer = EnrollmentsSerializer(data=mutable_request)
@@ -34,6 +35,17 @@ def enrollment_get_api(request):
 			# return Response(serializer.data, status=201)
 			return redirect('units')
 		return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def enrollment_delete_api(request, pk):
+	user = request.user
+	# make sure the user deleting the enrollment is the user who created it
+	enrollment = Enrollments.objects.get(pk=pk)
+	if enrollment.user == user:
+		if request.method == 'GET':
+			enrollment = Enrollments.objects.get(pk=pk)
+			enrollment.delete()
+			return redirect('units')
 
 # PAGE VIEWS
 def index(request):
@@ -88,7 +100,7 @@ def create_units(request):
 
 	unit_form = CreateUnitForm
 	units = Unit.objects.all()
-	enrollments = Enrollments.objects.filter(user=request.user)  # units the user is enrolled in
+	enrollments = Enrollments.objects.filter(user=request.user).order_by("semester")  # units the user is enrolled in
 	semesters = Semester.objects.all()
 
 	context = {'units': units, 'unit_form': unit_form, 'enrollments': enrollments, 'semesters': semesters}

@@ -1,0 +1,8 @@
+#trash {
+	color: grey;
+}
+
+#trash:hover {
+	color: red;
+}
+

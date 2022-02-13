@@ -85,3 +85,12 @@ web scraping work is largely done for now, I want to pivot to working on the ass
 ## Feature ideas
 
 [ ] Ability to rate units on different dimensions: teaching quality, difficulty, etc etc - can use a glassdoor mechanism to get users to review a unit in order to view other units
+
+
+
+# useful links: 
+
+## API related Rest Framework stuff
+
+- [Rest API Examples](https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html)
+- [Rest CRUD API outline](https://stackabuse.com/creating-a-rest-api-with-django-rest-framework/)
