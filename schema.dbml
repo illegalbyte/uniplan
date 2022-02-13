@@ -32,6 +32,8 @@ Table semester {
   index choice(1,2,3)
   start_date datetime
   end_date datetime
+  is_past boolean
+  is_active boolean
 }
 
 Table unit {
@@ -160,4 +162,3 @@ Ref: "UnitAvailability"."unit" < "unit"."unit_code"
 
 Ref: "UnitData"."unit" > "unit"."unit_code"
 
-Ref: "UnitData"."trimesters_available" < "UnitAvailability"."id"

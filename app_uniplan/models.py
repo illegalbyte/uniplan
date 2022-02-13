@@ -33,6 +33,9 @@ class Semester(models.Model):
 	index = models.IntegerField(choices=[(1, "1"), (2, "2"), (3, "3")], default=1)
 	start_date = models.DateField(null=True, blank=True)
 	end_date = models.DateField(null=True, blank=True)
+	is_past = models.BooleanField(default=False)
+	# TODO: add a method to check if a semester is current aka automate the workflow of marking semesters as active or past
+	is_active = models.BooleanField(default=False)
 	
 	def __str__(self):
 		return f"{self.year}-Semester {self.index}"
