@@ -108,6 +108,8 @@ class Assignment(models.Model):
 	title = models.CharField(max_length=200, help_text="The title of the assignment")
 	description = models.TextField(blank=True, null=True, help_text="The description of the assignment")
 	due_date = models.DateTimeField(blank=True, null=True, help_text="The due date of the assignment")
+	due_week_text = models.CharField(max_length=30, blank=True, null=True, help_text="The week of the semester the assignment is due")
+	due_week_number = models.IntegerField(blank=True, null=True, help_text="The week of the semester the assignment is due")
 	status = models.CharField(blank=True, null=True, max_length=15, choices=[(
 		'unpublished', 'Unpublished'), ('open', 'Open'), ('closed', 'Closed'), ('graded', 'Graded')], default='open')
 	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")

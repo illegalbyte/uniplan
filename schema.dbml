@@ -68,6 +68,8 @@ Table assignment {
   title varchar
   description varchar
   due_date datetime
+  due_week_text varchar
+  due_week_number int
   status choice(unpublished, open, closed, graded)
   marks int [note: 'marks awarded']
 }
