@@ -5,14 +5,15 @@
 
 <h1>Your upcoming assignments</h1>
 
-<button href="{% url add_all_missing_assignments %}"class="btn btn-warning">Click to add <b>{{total_assignments_count}} Tasks</b> Not yet added</button>
+<a href="{% url "add_all_missing_assignments" %}"><button class="btn btn-warning">Click to add <b>{{total_assignments_count}} Tasks</b> Not yet added</button></a>
 
 
 <table id="assignments" class="table table-striped table-bordered">
 	<thead>
 		<tr>
-			<th>Course</th>
+			<th>Unit</th>
 			<th>Assignment</th>
+			<th>Due Week</th>
 			<th>Due Date</th>
 			<th>Status</th>
 		</tr>
@@ -20,8 +21,9 @@
 	<tbody>
 		{% for assignment in assignments %}
 		<tr>
-			<td>{{ assignment.unit.unit_code }}: {{ assignment.unit.name }}</td>
+			<td>{{ assignment.unit.unit_code }}</td>
 			<td>{{ assignment.title }}</td>
+			<td>{{ assignment.due_week_text }}</td>
 			<td>{{ assignment.due_date }}</td>
 			<td>{{ assignment.status }}</td>
 		</tr>
@@ -29,11 +31,37 @@
 	</tbody>
 </table>
 <script>
+{% comment %} var editor = new $.fn.dataTable.Editor( {
+    ajax:  '/api/staff',
+    table: '#assignments',
+    fields: [
+		{label : "Unit", name: "unit_code"},
+		{label: "Title", name: "title"},
+		{label: "Due Week", name: "due_week"},
+		{label: "Due Date", name: "due_date"},
+		{label: "Status", name: "status"},
+    ]
+} ); {% endcomment %}
+
 $(document).ready(function() {
     $('#assignments').DataTable({
-		"order": [[ 2, "asc" ]],
+		"order": [[ 2, "des" ]],
 		"paging": false,
 		"info": false,
+		{% comment %} "ajax": "{% url 'assignments_json' %}",
+		"columns": [
+			{ "data": "unit_code" },
+			{ "data": "title" },
+			{ "data": "due_week_text" },
+			{ "data": "due_date" },
+			{ "data": "status" }
+		],
+		"select": true, 
+		"buttons": [
+			{ extend: 'create', editor: editor },
+			{ extend: 'edit',   editor: editor },
+			{ extend: 'remove', editor: editor }
+		], {% endcomment %}
 	});
 });
 </script>
