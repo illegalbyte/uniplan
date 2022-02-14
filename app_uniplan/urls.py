@@ -17,4 +17,6 @@ urlpatterns = [
 	# API URLS
 	path('api/enroll/', views.enrollment_get_api, name='enroll_unit_api'),
 	path('api/enroll/delete/<str:pk>/', views.enrollment_delete_api, name='delete_enrollment_api'),
+	path('api/assignments/', views.AssignmentsAPI.as_view(), name='assignment_api'),
+
 ]

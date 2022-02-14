@@ -9,13 +9,15 @@ from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignm
 from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, MajorSequence, MinorSequence, CoreSequence, UnitData, UnitAvailability
 from .deakin_scraper import course_scraper
 from django.utils import timezone
+# python utils
 import json
+import colorama
 # restframework imports
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import EnrollmentsSerializer
+from .serializers import EnrollmentsSerializer, AssignmentSerializer
 
 '''
 API VIEWS
@@ -41,6 +43,9 @@ def enrollment_get_api(request):
 
 @api_view(['GET'])
 def enrollment_delete_api(request, pk):
+	'''
+	Handles clicking the delete "trash" icon on the enrollment page
+	'''
 	user = request.user
 	# make sure the user deleting the enrollment is the user who created it
 	enrollment = Enrollments.objects.get(pk=pk)
@@ -49,6 +54,33 @@ def enrollment_delete_api(request, pk):
 			enrollment = Enrollments.objects.get(pk=pk)
 			enrollment.delete()
 			return redirect('units')
+
+
+class AssignmentsAPI(APIView):
+	permission_classes = [permissions.IsAuthenticated]
+	def get(self, request):
+		assignments = Assignment.objects.filter(created_by=request.user)
+		serializer = AssignmentSerializer(assignments, many=True)
+		return Response(serializer.data)
+	def post(self, request):
+		serializer = AssignmentSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=201)
+		return Response(serializer.errors, status=400)
+	def delete(self, request, pk):
+		assignment = Assignment.objects.get(pk=pk)
+		assignment.delete()
+		return Response(status=204)
+	def patch(self, request, pk):
+		assignment = Assignment.objects.get(pk=pk)
+		serializer = AssignmentSerializer(assignment, data=request.data, partial=True)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=400)
+		
+
 
 '''
 PAGE VIEWS
@@ -130,6 +162,7 @@ def assignments(request):
 	# get all UnitData objects for the units the user is enrolled in
 	assignment_jsons = UnitData.objects.filter(unit__in=users_current_semester_enrollments).values('assignments_json')
 
+	# FIXME: the add assignments count button doesn't dissapear after they're added
 	total_assignments_count = 0
 	for unit_data_obj in assignment_jsons.all():
 		# unit
@@ -137,7 +170,6 @@ def assignments(request):
 		total_assignments_count += len(units_tasks)
 		
 	print(total_assignments_count)
-
 
 	add_assignment_form = CreateAssignmentForm
 	user = request.user
@@ -147,6 +179,44 @@ def assignments(request):
 
 @login_required
 def add_all_missing_assignments(request):
+	current_semester = Semester.objects.get(is_active=True)
+	users_current_semester_enrollments = Enrollments.objects.filter(user=request.user, semester=current_semester).values('unit')
+
+	for unitdata_obj in UnitData.objects.filter(unit__in=users_current_semester_enrollments).values():
+		current_unitdata_obj = UnitData.objects.get(pk=unitdata_obj['id'])
+		for count, unit_task in enumerate(json.loads(unitdata_obj['assignments_json'])):
+			tasks_unit = unitdata_obj['unit_id']
+			task_name = unit_task['assignment_description']
+			task_type = unit_task['student_output']
+			weighting_text = unit_task['weighting']
+			description = unit_task['assignment_description']
+			try:
+				weighting_number = float(unit_task['weighting'].strip('%'))/100
+			except ValueError:
+				print(f"{colorama.Fore.RED}ValueError:{colorama.Fore.RESET} weighting for {tasks_unit}: {task_name} cannot be resolved to a number:\n{weighting_text}")
+			due_week_text = unit_task['due_week']
+			# FIXME: due_week_number always assigns to 0
+			if (str(due_week_text).isalnum()):
+				due_week_number = int(due_week_text[-1])
+			else:
+				due_week_number = 0
+			assignment_obj = Assignment.objects.filter(created_by=request.user, unit=tasks_unit, title=task_name, task_type=task_type, weighting_text=weighting_text, due_week_text=due_week_text)
+			if not assignment_obj:
+				assignment = Assignment(
+					unit=Unit.objects.get(pk=tasks_unit),
+					unit_data = current_unitdata_obj,
+					created_by=request.user, 
+					weighting_text = weighting_text,
+					weighting_number = weighting_number,
+					title=task_name, 
+					task_type=task_type, 
+					description = description,
+					due_week_text = due_week_text,
+					due_week_number=due_week_number
+				)
+				assignment.save()
+				print(f"{colorama.Fore.GREEN}New assignment created for {request.user}:{colorama.Fore.RESET} {tasks_unit}: {task_name}")
+
 	return redirect('assignments')
 
 @login_required
