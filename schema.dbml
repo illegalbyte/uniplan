@@ -73,6 +73,7 @@ Table assignment {
   due_week_number int
   status choice(unpublished, open, closed, graded)
   marks int [note: 'marks awarded']
+  assessment_type varchar
 }
 
 Ref: "unit"."unit_code" < "assignment"."unit"
