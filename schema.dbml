@@ -63,7 +63,8 @@ Table assignment {
   id int [pk, increment]
   unit FK_Unit
   created_by FK_User
-  weighting float
+  weighting_text varchar
+  weighting_number float
   total_marks_available int
   title varchar
   description varchar
