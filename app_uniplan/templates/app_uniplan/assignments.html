@@ -21,7 +21,7 @@
 	<tbody>
 		{% for assignment in assignments %}
 		<tr>
-			<td>{{ assignment.unit.unit_code }}</td>
+			<td>{{ assignment.unit }}</td>
 			<td>{{ assignment.title }}</td>
 			<td>{{ assignment.due_week_text }}</td>
 			<td>{{ assignment.due_date }}</td>
@@ -69,7 +69,7 @@ $(document).ready(function() {
 <h1>Add an assignment</h1>
 <form method="POST">
 	{% csrf_token %}
-	{{ form.as_table }}
+	{{ form.as_p }}
 	<button type="submit" class="btn btn-primary">Add</button>
 </form>
 
