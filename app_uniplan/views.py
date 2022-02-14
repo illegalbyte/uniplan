@@ -1,3 +1,4 @@
+from pprint import pprint
 from django.http import QueryDict
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -16,9 +17,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import EnrollmentsSerializer
 
-# TODO: secure via authentication!!!
-
+'''
+API VIEWS
+'''
 @api_view(['GET', 'POST'])
+# TODO: secure via authentication!!!
 def enrollment_get_api(request):
 	if request.method == 'GET':
 		enrollments = Enrollments.objects.filter(user=request.user)
@@ -47,7 +50,9 @@ def enrollment_delete_api(request, pk):
 			enrollment.delete()
 			return redirect('units')
 
-# PAGE VIEWS
+'''
+PAGE VIEWS
+'''
 def index(request):
 	return render(request, 'app_uniplan/index.html')
 
@@ -116,12 +121,33 @@ def unit_detail(request, pk):
 
 @login_required
 def assignments(request):
+
+	current_semester = Semester.objects.get(is_active=True)
+	users_current_semester_enrollments = Enrollments.objects.filter(user=request.user, semester=current_semester).values('unit')
+	# find all Assignment objects created by user and unit is in users_current_semester_enrollments
+	assignments = Assignment.objects.filter(created_by=request.user, unit__in=users_current_semester_enrollments)
+
+	# get all UnitData objects for the units the user is enrolled in
+	assignment_jsons = UnitData.objects.filter(unit__in=users_current_semester_enrollments).values('assignments_json')
+
+	total_assignments_count = 0
+	for unit_data_obj in assignment_jsons.all():
+		# unit
+		units_tasks = json.loads(unit_data_obj['assignments_json'])
+		total_assignments_count += len(units_tasks)
+		
+	print(total_assignments_count)
+
+
 	add_assignment_form = CreateAssignmentForm
 	user = request.user
-	assignments = Assignment.objects.filter(created_by=user)
-	context = {'assignments': assignments, 'form': add_assignment_form}
+	# assignments = Assignment.objects.filter(created_by=user)
+	context = {'assignments': assignments, 'form': add_assignment_form, 'total_assignments_count': total_assignments_count}
 	return render(request, 'app_uniplan/assignments.html', context)
 
+@login_required
+def add_all_missing_assignments(request):
+	return redirect('assignments')
 
 @login_required
 def enrollment(request):
@@ -209,7 +235,7 @@ def batch_add_units(request):
 
 @login_required
 def sequences(request):
-	# BUG: IN ORDER FOR THESE TO WORK, THE UNITS MUST ALREADY EXIST IN THE DATABASE WHICH OCCURS ONLY THROUGH THE SCRAPE_DEAKIN VIEW CURRENTLY
+	# BUG: IN ORDER FOR ASSIGNING UNITS TO SEQUENCES TO WORK, THE UNITS MUST ALREADY EXIST IN THE DATABASE WHICH OCCURS ONLY THROUGH THE SCRAPE_DEAKIN VIEW CURRENTLY
 
 	if request.method == 'POST':
 		sequence_url_form = ScrapeSequencesForm(request.POST)

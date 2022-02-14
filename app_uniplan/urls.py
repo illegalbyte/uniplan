@@ -10,6 +10,7 @@ urlpatterns = [
 	path('units/', views.create_units, name='units'),
 	path('units/<str:pk>/', views.unit_detail, name='unit_detail'),
 	path('assignments/', views.assignments, name='assignments'),
+	path('assignments/addallmissing', views.add_all_missing_assignments, name='add_all_missing_assignments'),
 	path('enrollment/', views.enrollment, name='enrollment'),
 	path('scrape/', views.batch_add_units, name='scrape'),
 	path('sequences/', views.sequences, name='sequences'),

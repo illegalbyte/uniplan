@@ -4,6 +4,10 @@
 {% block content %}
 
 <h1>Your upcoming assignments</h1>
+
+<button href="{% url add_all_missing_assignments %}"class="btn btn-warning">Click to add <b>{{total_assignments_count}} Tasks</b> Not yet added</button>
+
+
 <table id="assignments" class="table table-striped table-bordered">
 	<thead>
 		<tr>
