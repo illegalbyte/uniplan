@@ -107,6 +107,7 @@ class Assignment(models.Model):
 	weighting_number = models.FloatField(help_text="The % weighting of the assignment in the overall grade as a decimal (e.g. 0.5 for 50%)")
 	total_marks_available = models.IntegerField(blank=True, null=True, help_text="The total marks available for the assignment")
 	title = models.CharField(max_length=200, help_text="The title of the assignment")
+	task_type = models.CharField(blank=True, null=True, max_length=100)
 	description = models.TextField(blank=True, null=True, help_text="The description of the assignment")
 	due_date = models.DateTimeField(blank=True, null=True, help_text="The due date of the assignment")
 	due_week_text = models.CharField(max_length=30, blank=True, null=True, help_text="The week of the semester the assignment is due")
