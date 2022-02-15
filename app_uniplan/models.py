@@ -122,7 +122,9 @@ class Assignment(models.Model):
 	due_week_number = models.IntegerField(blank=True, null=True, help_text="The week of the semester the assignment is due")
 	status = models.CharField(blank=True, null=True, max_length=20, choices=STATUS_CHOICES, default='NOT_STARTED')
 	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")
-	
+	user_notion_url = models.URLField(blank=True, null=True, help_text="Your notion url to the assignment")
+	user_googledoc_url = models.URLField(blank=True, null=True, help_text="Your google doc link to the assignment")
+
 	def __str__(self):
 		return str(self.created_by) + ": " + self.title
 
