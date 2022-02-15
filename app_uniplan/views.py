@@ -178,6 +178,13 @@ def assignments(request):
 	return render(request, 'app_uniplan/assignments.html', context)
 
 @login_required
+def assignment_detail(request, pk):
+	assignment = Assignment.objects.get(pk=pk)
+	context = {'assignment': assignment}
+	return render(request, 'app_uniplan/assignment_detail.html', context)
+
+
+@login_required
 def add_all_missing_assignments(request):
 	current_semester = Semester.objects.get(is_active=True)
 	users_current_semester_enrollments = Enrollments.objects.filter(user=request.user, semester=current_semester).values('unit')
