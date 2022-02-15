@@ -117,7 +117,7 @@ class Assignment(models.Model):
 	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")
 	
 	def __str__(self):
-		return self.title
+		return str(self.created_by) + ": " + self.title
 
 class CoreSequence(models.Model):
 	'''
