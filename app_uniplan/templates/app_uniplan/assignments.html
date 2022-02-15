@@ -13,14 +13,14 @@
 <p class="text-secondary"><i class="fa-solid fa-lightbulb text-warning"></i>&nbsp;&nbsp; Double click certain field to edit data</p>
 </div>
 </div>
-<i class="fa-solid fa-check"></i>
+
 <table id="assignments" class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Edit</th>
 			<th>Unit</th>
-			<th>Assignment</th>
 			<th>Weighting</th>
+			<th>Assignment</th>
 			<th>Due Week</th>
 			<th>Due Week (#)</th>
 			<th>Due Date</th>
@@ -31,13 +31,18 @@
 		{% for assignment in assignments %}
 		<tr>
 			<td><center><a href="{{ assignment.id }}"><i class="fa-solid fa-pen-to-square"></i></a></center></td>
-			<td style="font-size: 10px;">{{ assignment.unit }}</td>
+			<td style="" title="{{ assignment.unit }}">{{ assignment.unit.unit_code }}</td>
+			<td class="weighting">{{ assignment.weighting_number|floatformat:0 }}%</td>
 			<td><a href="{{ assignment.id }}">{{ assignment.title }}</a></td>
-			<td>{{ assignment.weighting_number|floatformat:0 }}%</td>
 			<td>{{ assignment.due_week_text }}</td>
-			<td class="editable" data-id="{{ assignment.id }}" data-type="due_week_number">{{ assignment.due_week_number }}</td>
-			<td class="editable" data-id="{{ assignment.id }}" data-type="due_date">{{ assignment.due_date }}</td>
-			<td class="editable" data-id="{{ assignment.id }}" data-type="status">
+			<td class="editable clickable" data-id="{{ assignment.id }}" data-type="due_week_number">{{ assignment.due_week_number }}</td>
+			<td class="editable clickable" data-id="{{ assignment.id }}" data-type="due_date">
+				{% if assignment.due_date == None %}
+					<i class="fa-solid fa-calendar-times"></i>&nbsp; <i class="text-muted onhover clickable">Click to set</i>
+				{% else %}
+					{{ assignment.due_date|date:"d/m/Y" }}
+				{% endif %}
+			<td class="editable clickable" data-id="{{ assignment.id }}" data-type="status">
 				{% if assignment.status == "NOT_STARTED"  %}
 				<i class="fa-solid fa-book text-muted"></i>
 				{% elif assignment.status == "IN_PROGRESS" %}
@@ -80,7 +85,13 @@ $(document).ready(function() {
 		// Thanks to hackstarsj!
 		// https://github.com/hackstarsj/simpleDjangoProject/blob/db4d7dd4b3fc0a3d485d2ad3992546435f85c0ff/simpleFirstApp/templates/show_data.html
         $(document).ready(function(){
-            $(document).on("click",".editable",function(){
+			// if td has class "weighting" then add a class based on weighting_colour()
+			td = $('.weighting');
+			td.each(function(){
+				$(this).addClass(weighting_colour($(this).text().substring(0,$(this).text().length-1)));
+			});
+			
+			$(document).on("click",".editable",function(){
                 var value=$(this).text();
                 var data_type=$(this).data("type");
                 var input_type="text";
@@ -215,7 +226,17 @@ $(document).ready(function() {
             }
         });
 
-</script>
+		// adjusting colours of exam weightings
+		function weighting_colour(weighting) {
+			if(weighting < 25 ) {
+				return "text-success";
+			} else if(weighting >= 25 && weighting < 50) {
+				return "text-warning";
+			} else if(weighting >= 50) {
+				return "text-danger";
+			}
+		}
+	</script>
 
 <hr>
 <details><summary>Add an assignment manually</summary>
