@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUnitForm, SignupForm, StudentProfileForm, CreateAssignmentForm, ScrapeURLForm, MajorSequence, UnitSetForm, UpdateUserForm, ScrapeSequencesForm, ScrapeSequenceForm
 from .models import Unit, Enrollments, Assignment, Semester, Course, UnitSet, MajorSequence, MinorSequence, CoreSequence, UnitData, UnitAvailability
@@ -57,6 +58,9 @@ def enrollment_delete_api(request, pk):
 
 
 class AssignmentsAPI(APIView):
+	'''
+	CRUD Functions for Assignment data
+	'''
 	permission_classes = [permissions.IsAuthenticated]
 	def get(self, request):
 		assignments = Assignment.objects.filter(created_by=request.user)
@@ -72,7 +76,9 @@ class AssignmentsAPI(APIView):
 		assignment = Assignment.objects.get(pk=pk)
 		assignment.delete()
 		return Response(status=204)
-	def patch(self, request, pk):
+	def patch(self, request):
+		pk = request.data['id']
+		print(f"PATCH REQEUST RECEIVED\nPK: {pk}\nDATA: {request.data}")
 		assignment = Assignment.objects.get(pk=pk)
 		serializer = AssignmentSerializer(assignment, data=request.data, partial=True)
 		if serializer.is_valid():
