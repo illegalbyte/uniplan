@@ -39,15 +39,15 @@
 			<td class="editable" data-id="{{ assignment.id }}" data-type="due_date">{{ assignment.due_date }}</td>
 			<td class="editable" data-id="{{ assignment.id }}" data-type="status">
 				{% if assignment.status == "NOT_STARTED"  %}
-				<i class="fa-solid fa-book"></i>
+				<i class="fa-solid fa-book text-muted"></i>
 				{% elif assignment.status == "IN_PROGRESS" %}
-				<i class="fa-solid fa-list-check"></i>
+				<i class="fa-solid fa-list-check text-primary"></i>
 				{% elif assignment.status == "COMPLETED" %}
-				<i class="fa-solid fa-check"></i>
+				<i class="fa-solid fa-check text-success"></i>
 				{% elif assignment.status == "GRADED" %}
-				<i class="fa-solid fa-user-check"></i>
+				<i class="fa-solid fa-user-check text-warning"></i>
 				{% elif assignment.status == "DID_NOT_SUBMIT" %}
-				<i class="fa-solid fa-hexagon-exclamation"></i>
+				<i class="fa-solid fa-hexagon-exclamation text-danger"></i>
 				{% endif %}
 				{{ assignment.get_status_display }}
 			</td>
@@ -65,6 +65,10 @@ $(document).ready(function() {
 			{
 				"targets": [ 7 ],
 				"width": "10%"
+			},
+			{
+				"targets": [ 1 ],
+				"width": "2%"
 			}
 		]
 	});
@@ -144,22 +148,22 @@ $(document).ready(function() {
 					console.log("START SWITCH")
 					switch(value) {
 						case "NOT_STARTED":
-							readable_text = '<i class="fa-solid fa-book"></i> Not Started';
+							readable_text = '<i class="fa-solid fa-book text-muted"></i> Not Started';
 							console.log("SWITCH RAN ON NOT_STARTED")
 							break;
 						case "IN_PROGRESS":
-							readable_text = '<i class="fa-solid fa-list-check"></i> In Progress';
+							readable_text = '<i class="fa-solid fa-list-check text-primary"></i> In Progress';
 							console.log("SWITCH RAN ON IN_PROGRESS")
 							break;
 						case "COMPLETED":
-							readable_text = '<i class="fa-solid fa-check"></i> Completed';
+							readable_text = '<i class="fa-solid fa-check text-success"></i> Completed';
 							console.log("HOLA")
 							break;
 						case "DID_NOT_SUBMIT":
-							readable_text = '<i class="fa-solid fa-hexagon-exclamation"></i> Didn\'t Submit';
+							readable_text = '<i class="fa-solid fa-hexagon-exclamation text-danger"></i> Didn\'t Submit';
 							break;
 						case "GRADED":
-							readable_text = '<i class="fa-solid fa-user-check"></i> Graded';
+							readable_text = '<i class="fa-solid fa-user-check text-warning"></i> Graded';
 							break;
 					}
 					td.html(readable_text);
