@@ -164,6 +164,9 @@ def assignments(request):
 	users_current_semester_enrollments = Enrollments.objects.filter(user=request.user, semester=current_semester).values('unit')
 	# find all Assignment objects created by user and unit is in users_current_semester_enrollments
 	assignments = Assignment.objects.filter(created_by=request.user, unit__in=users_current_semester_enrollments)
+	# iterate over assignment objects and multiply weightig_number by 100 to get percentage
+	for assignment in assignments:
+		assignment.weighting_number *= 100
 
 	# get all UnitData objects for the units the user is enrolled in
 	assignment_jsons = UnitData.objects.filter(unit__in=users_current_semester_enrollments).values('assignments_json')
@@ -174,8 +177,6 @@ def assignments(request):
 		# unit
 		units_tasks = json.loads(unit_data_obj['assignments_json'])
 		total_assignments_count += len(units_tasks)
-		
-	print(total_assignments_count)
 
 	add_assignment_form = CreateAssignmentForm
 	user = request.user
