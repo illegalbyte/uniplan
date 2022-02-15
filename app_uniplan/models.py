@@ -100,6 +100,14 @@ class Assignment(models.Model):
 	'''
 	the model for an assignment
 	'''
+	STATUS_CHOICES = [
+		('NOT_STARTED', 'Not Started'), 
+		('IN_PROGRESS', 'In Progress'), 
+		('COMPLETED', 'Completed'), 
+		('GRADED', 'Graded'), 
+		('DID_NOT_SUBMIT', 'Didn\'t Submit'),
+	]
+
 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
 	unit_data = models.ForeignKey(UnitData, on_delete=models.CASCADE, null=True)
 	created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -112,8 +120,7 @@ class Assignment(models.Model):
 	due_date = models.DateTimeField(blank=True, null=True, help_text="The due date of the assignment")
 	due_week_text = models.CharField(max_length=30, blank=True, null=True, help_text="The week of the semester the assignment is due")
 	due_week_number = models.IntegerField(blank=True, null=True, help_text="The week of the semester the assignment is due")
-	status = models.CharField(blank=True, null=True, max_length=15, choices=[(
-		'unpublished', 'Unpublished'), ('open', 'Open'), ('closed', 'Closed'), ('graded', 'Graded')], default='open')
+	status = models.CharField(blank=True, null=True, max_length=20, choices=STATUS_CHOICES, default='NOT_STARTED')
 	marks = models.IntegerField(blank=True, null=True, help_text="The marks received for the assignment")
 	
 	def __str__(self):
