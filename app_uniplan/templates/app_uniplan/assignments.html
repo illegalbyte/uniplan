@@ -11,9 +11,11 @@
 <table id="assignments" class="table table-striped table-bordered">
 	<thead>
 		<tr>
+			<th>Edit</th>
 			<th>Unit</th>
 			<th>Assignment</th>
 			<th>Due Week</th>
+			<th>Due Week (#)</th>
 			<th>Due Date</th>
 			<th>Status</th>
 		</tr>
@@ -21,9 +23,11 @@
 	<tbody>
 		{% for assignment in assignments %}
 		<tr>
+			<td><center><a href="{{ assignment.id }}"><i class="fa-solid fa-pen-to-square"></i></a></center></td>
 			<td>{{ assignment.unit }}</td>
-			<td>{{ assignment.title }}</td>
+			<td><a href="{{ assignment.id }}">{{ assignment.title }}</a></td>
 			<td>{{ assignment.due_week_text }}</td>
+			<td class="editable" data-id="{{ assignment.id }}" data-type="due_week_number">{{ assignment.due_week_number }}</td>
 			<td>{{ assignment.due_date }}</td>
 			<td>{{ assignment.status }}</td>
 		</tr>
@@ -48,7 +52,8 @@ $(document).ready(function() {
 		"order": [[ 2, "des" ]],
 		"paging": false,
 		"info": false,
-		{% comment %} "ajax": "{% url 'assignments_json' %}",
+		{% comment %} 
+		"ajax": "{% url 'assignments_json' %}",
 		"columns": [
 			{ "data": "unit_code" },
 			{ "data": "title" },
@@ -64,13 +69,41 @@ $(document).ready(function() {
 		], {% endcomment %}
 	});
 });
+
+$(document).ready(function() {
+	$('.editable').editable(function(value, settings) {
+		var id = $(this).data('id');
+		var type = $(this).data('type');
+		var data = {};
+		data[type] = value;
+		$.ajax({
+			url: "/api/staff/" + id,
+			type: "PUT",
+			data: data,
+			success: function(result) {
+				console.log(result);
+			}
+		});
+		return(value);
+	}, {
+		type: 'text',
+		submit: 'OK',
+		cancel: 'Cancel',
+		indicator: 'Saving...',
+		tooltip: 'Click to edit...'
+	});
+} );
+
+
 </script>
 
+<hr>
+<details><summary>Add an assignment manually</summary>
 <h1>Add an assignment</h1>
 <form method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}
 	<button type="submit" class="btn btn-primary">Add</button>
 </form>
-
+<details>
 {% endblock %}
