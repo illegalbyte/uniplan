@@ -4,8 +4,132 @@
 
 
 {% block content %}
+{% load static %}
 
-<h1>{{assignment.title}}: {{assignment.unit}} </h1>
+<h1>{{assignment.title}} <span class="badge bg-secondary">{{assignment.unit}}</span></h1>
+{% comment %} card {% endcomment %}
+<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span></h3>
+	</div>
+	<div class="card-body">
+		<h4 class="card-title">{{assignment.unit}}</h4>
+		<p class="card-text">{{assignment.description}}</p>
+		<div class="row">
+			<div class="col">
+				<div class="card h-100">
+					<div class="card-body">
+						<h4 class="card-title text-center">Notion</h4>
+						<center><img class="w-25 h-25" src="{% static "img/notion.png" %}" alt="Notion Logo"></center>
+						<hr>
+						<form class="data-form">
+							<div class="input-group mb-3">
+								<input data-type="user_notion_url" type="url" {% if assignment.user_notion_url %}value="{{assignment.user_notion_url}}"{% endif %} class="form-control" placeholder="Link to your Notion" aria-label="Link to notion document" aria-describedby="button-addon2">
+								<button class="btn btn-outline-secondary" type="submit" id="button-save-notion">Save</button>
+							</div>
+							<div id="alert" role="alert"></div>						
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card h-100">
+					<div class="card-body">
+						<h4 class="card-title text-center">Google Docs</h4>
+						<center><img class="w-25 h-25" src="{% static "img/docs.png" %}" alt="Google Docs icon"></center>
+						<hr>
+						<form class="data-form">
+							<div class="input-group mb-3">
+								<input data-type="user_googledoc_url" type="url" {% if assignment.user_googledoc_url %}value="{{assignment.user_googledoc_url}}"{% endif %} class="form-control" placeholder="Link to your Google Doc" aria-label="Link to notion document" aria-describedby="button-addon2" >
+								<button class="btn btn-outline-secondary" type="submit" id="button-save-notion">Save</button>
+							</div>
+							<div id="alert" role="alert"></div>						
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card h-100">
+					<div class="card-body">
+						<h4 class="card-title text-center">Assignment Briefs</h4>
+						<div class="input-group mb-3">
+  							<label class="input-group-text" for="inputGroupFile01">Upload</label>
+  							<input type="file" class="form-control" id="inputGroupFile01">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script>
+
+$(document).ready( function () {
+	$('.data-form').submit(function(event) {
+		event.preventDefault();
+
+		var value = $(this).find('input').val();
+		var data_type = $(this).find('input').data('type');
+		var API_STATUS = APIcall({{assignment.id}}, data_type, value)
+		console.log(API_STATUS);
+		if (API_STATUS) {
+			// get the alert div
+			#TODO: FIX BUGS WITH DISPLAYING CORRECT ALERTS!
+			console.log("RAN SUCCESS")
+			var alert = $(this).find("#alert");
+			alert.removeClass("alert alert-danger");
+			alert.addClass("alert alert-success");
+			alert.text("Successfully saved");
+		} else {
+			// get the alert div
+			console.log("RAN ERROR")
+			var alert = $(this).find("#alert");
+			alert.removeClass("alert alert-success");
+			alert.addClass("alert alert-danger");
+			alert.text(API_STATUS + " Error: URL may not be valid");
+		}
+	});
+});
+
+
+var return_value = false;
+function APIcall(id, data_type, value) {
+	ajax_data = {
+		'id': id,
+		'csrfmiddlewaretoken': '{{ csrf_token }}',
+	}	
+	ajax_data[data_type] = value;
+	$.ajax({
+		url: `{% url "assignment_api" %}?pk={id}`,
+		type:"PATCH",
+		headers: {
+			'X-CSRFToken': '{{ csrf_token }}'
+		},
+		data: ajax_data,
+		success: function(data) {
+			console.log(data);
+			return_value = true;
+		},
+		error: function(data) {
+			console.log(data);
+			return_value = data['responseText'];
+		}
+	})
+	.done(function(data) {
+		console.log("Successful API call!");
+	})
+	.fail(function(data) {
+		console.log(data['responseText']);
+		
+	});
+	return return_value;
+
+}
+
+</script>
+
 
 
 <h2>{{assignment.task_type}}</h2>
