@@ -6,15 +6,12 @@
 {% block content %}
 {% load static %}
 
-<h1>{{assignment.title}} <span class="badge bg-secondary">{{assignment.unit}}</span></h1>
 {% comment %} card {% endcomment %}
 <div class="card">
 	<div class="card-header">
-		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span></h3>
+		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span>&nbsp;<span class="badge bg-secondary">{{assignment.unit}}</span></h3>
 	</div>
 	<div class="card-body">
-		<h4 class="card-title">{{assignment.unit}}</h4>
-		<p class="card-text">{{assignment.description}}</p>
 		<div class="row">
 			<div class="col">
 				<div class="card h-100">
@@ -129,10 +126,6 @@ function APIcall(id, data_type, value) {
 }
 
 </script>
-
-
-
-<h2>{{assignment.task_type}}</h2>
 
 
 
