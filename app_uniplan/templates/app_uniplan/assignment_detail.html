@@ -2,14 +2,20 @@
 
 {% block title %}Details for {{assignment}}{% endblock %}
 
+{% comment %} embed js script from static {% endcomment %}
+
 
 {% block content %}
 {% load static %}
 
+{% block js %}
+<script src="{% static 'js/index-bundle.js' %}"></script>
+{% endblock %}
+
 {% comment %} card {% endcomment %}
 <div class="card">
 	<div class="card-header">
-		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span>&nbsp;<a href="{% url %}"><span class="badge bg-secondary">{{assignment.unit}}</span></a></h3>
+		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span>&nbsp;<a href="{% url 'unit_detail' pk=assignment.unit.unit_code  %}"><span class="badge bg-secondary">{{assignment.unit}}</span></a></h3>
 	</div>
 	<div class="card-body">
 		<div class="row">
@@ -40,7 +46,8 @@
 								<input data-type="user_googledoc_url" type="url" {% if assignment.user_googledoc_url %}value="{{assignment.user_googledoc_url}}"{% endif %} class="form-control" placeholder="Link to your Google Doc" aria-label="Link to notion document" aria-describedby="button-addon2" >
 								<button class="btn btn-outline-secondary" type="submit" id="button-save-notion">Save</button>
 							</div>
-							<div id="alert" role="alert"></div>						
+							<div id="alert" role="alert"></div>
+							<div id="react-test"></div>						
 						</form>
 					</div>
 				</div>
@@ -73,7 +80,7 @@ $(document).ready( function () {
 		console.log(API_STATUS);
 		if (API_STATUS) {
 			// get the alert div
-			#TODO: FIX BUGS WITH DISPLAYING CORRECT ALERTS!
+			{% comment %} #TODO: FIX BUGS WITH DISPLAYING CORRECT ALERTS! {% endcomment %}
 			console.log("RAN SUCCESS")
 			var alert = $(this).find("#alert");
 			alert.removeClass("alert alert-danger");

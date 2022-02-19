@@ -89,8 +89,29 @@ web scraping work is largely done for now, I want to pivot to working on the ass
 
 
 # useful links: 
+- [Django Javascript Hybrid Framework pt 1](https://www.saaspegasus.com/guides/modern-javascript-for-django-developers/client-server-architectures/)
+
 
 ## API related Rest Framework stuff
 
 - [Rest API Examples](https://simpleisbetterthancomplex.com/tutorial/2018/02/03/how-to-use-restful-apis-with-django.html)
 - [Rest CRUD API outline](https://stackabuse.com/creating-a-rest-api-with-django-rest-framework/)
+
+
+## Javascript Toolchain notes: 
+
+- [Django Javascript Hybrid Framework pt 1](https://www.saaspegasus.com/guides/modern-javascript-for-django-developers/client-server-architectures/)
+
+- package manager: npm
+- bundler: webpack 
+- compiler: babel 
+
+![Js Architecture](https://www.saaspegasus.com/static/images/web/modern-javascript/js-pipeline-with-django.png)
+
+- [Setting up the pipeline](https://www.saaspegasus.com/guides/modern-javascript-for-django-developers/integrating-javascript-pipeline/)
+
+```bash 
+
+npm run dev
+
+```
