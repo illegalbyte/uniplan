@@ -1,28 +1,23 @@
 {% extends 'app_uniplan/base.html' %}
 
-{% block title %}Details for {{assignment}}{% endblock %}
-
-{% comment %} embed js script from static {% endcomment %}
-
+{% block title %}Assignment: {{assignment}}{% endblock %}
 
 {% block content %}
 {% load static %}
 
-{% block js %}
-<script src="{% static 'js/index-bundle.js' %}"></script>
-{% endblock %}
+
 
 {% comment %} card {% endcomment %}
 <div class="card">
 	<div class="card-header">
-		<h3 class="card-title">{{assignment.title}} <span class="badge bg-info">{{assignment.task_type}}</span>&nbsp;<a href="{% url 'unit_detail' pk=assignment.unit.unit_code  %}"><span class="badge bg-secondary">{{assignment.unit}}</span></a></h3>
+		<h3 class="card-title"><center>"{{assignment.title}}" <span class="badge bg-info">{{assignment.task_type}}</span>&nbsp;<a href="{% url 'unit_detail' pk=assignment.unit.unit_code  %}"><span class="badge bg-secondary">{{assignment.unit}}</span></a></center></h3>
 	</div>
 	<div class="card-body">
 		<div class="row">
 			<div class="col">
 				<div class="card h-100">
 					<div class="card-body">
-						<h4 class="card-title text-center">Notion</h4>
+						<div id="notion_url_heading"></div>
 						<center><img class="w-25 h-25" src="{% static "img/notion.png" %}" alt="Notion Logo"></center>
 						<hr>
 						<form class="data-form">
@@ -38,7 +33,7 @@
 			<div class="col">
 				<div class="card h-100">
 					<div class="card-body">
-						<h4 class="card-title text-center">Google Docs</h4>
+						<h4 class="card-title text-center">Google Docs &nbsp;<i class="fa-solid fa-arrow-up-right-from-square"></i></h4>
 						<center><img class="w-25 h-25" src="{% static "img/docs.png" %}" alt="Google Docs icon"></center>
 						<hr>
 						<form class="data-form">
@@ -64,7 +59,9 @@
 				</div>
 			</div>
 		</div>
-
+		<div id="root">
+			<script src="{% static 'js/index-bundle.js' %}"></script>
+		</div>
 	</div>
 </div>
 
@@ -76,30 +73,31 @@ $(document).ready( function () {
 
 		var value = $(this).find('input').val();
 		var data_type = $(this).find('input').data('type');
-		var API_STATUS = APIcall({{assignment.id}}, data_type, value)
-		console.log(API_STATUS);
-		if (API_STATUS) {
-			// get the alert div
-			{% comment %} #TODO: FIX BUGS WITH DISPLAYING CORRECT ALERTS! {% endcomment %}
-			console.log("RAN SUCCESS")
-			var alert = $(this).find("#alert");
-			alert.removeClass("alert alert-danger");
-			alert.addClass("alert alert-success");
-			alert.text("Successfully saved");
-		} else {
-			// get the alert div
-			console.log("RAN ERROR")
-			var alert = $(this).find("#alert");
-			alert.removeClass("alert alert-success");
-			alert.addClass("alert alert-danger");
-			alert.text(API_STATUS + " Error: URL may not be valid");
-		}
+		var context = $(this);
+		var API_STATUS = APIcall({{assignment.id}}, data_type, value, context);
+		console.log("API_STATUS = " + API_STATUS);
 	});
 });
 
+function displaySuccessOrWarning(success_state, context){
+	if (success_state) {
+		// get the alert div
+		console.log("RAN SUCCESS")
+		var alert = $(context).find("#alert");
+		alert.removeClass("alert alert-danger");
+		alert.addClass("alert alert-success");
+		alert.text("Successfully saved");
+	} else if (success_state == false) {
+		// get the alert div
+		console.log("RAN ERROR")
+		var alert = $(context).find("#alert");
+		alert.removeClass("alert alert-success");
+		alert.addClass("alert alert-danger");
+		alert.text(" Error: URL may not be valid");
+	}
+}
 
-var return_value = false;
-function APIcall(id, data_type, value) {
+function APIcall(id, data_type, value, context) {
 	ajax_data = {
 		'id': id,
 		'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -113,26 +111,18 @@ function APIcall(id, data_type, value) {
 		},
 		data: ajax_data,
 		success: function(data) {
-			console.log(data);
-			return_value = true;
+			displaySuccessOrWarning(true, context);
 		},
 		error: function(data) {
-			console.log(data);
-			return_value = data['responseText'];
+			displaySuccessOrWarning(false, context);
 		}
 	})
-	.done(function(data) {
-		console.log("Successful API call!");
-	})
-	.fail(function(data) {
-		console.log(data['responseText']);
-		
-	});
-	return return_value;
 
 }
 
 </script>
+
+
 
 
 

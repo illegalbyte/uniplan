@@ -24,11 +24,6 @@
 	<!-- Select2 -->
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-	<!-- React -->
-	<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-	<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-	<!-- Jsx -->
-	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
 </head>
 
@@ -90,6 +85,7 @@
 					<p class="card-text">
 						<a href="{% url 'password_reset' %}">Password reset</a>
 					</p>
+					<div class="card-text" id="clock"></div>
 				</div>
 			</div>
 		</div>
@@ -99,7 +95,7 @@
 					{% if user.is_authenticated %}
 					<h1 class="card-title text-center">Welcome {{ user.username }}! to UniPlan.io</h5>
 					{% else %}
-					<h1 class="card-title text-center">Welcome! to UniPlan.io</h5>
+					<h1 class="card-title text-center">Welcome! to UniPlan.io <span id="clock"></span></h5>
 					{% endif %}
 						<p class="card-text">
 						UniPlan.io is a tool designed to intelligently help students manage their: unit enrollment, assignments/exams, grades, and more. <br>
@@ -124,6 +120,6 @@
 </div>
 {% comment %} </div> {% endcomment %}
 
-
+<script src="{% static 'js/index-bundle.js' %}"></script>
 </body>
 </html>
